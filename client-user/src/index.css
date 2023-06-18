@@ -1,0 +1,15 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.custom-scrollbar::-webkit-scrollbar {
+    @apply w-1.5 h-2 z-50 bg-gray-200;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-[#f4b558] z-50 rounded;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-200 z-50;
+}

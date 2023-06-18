@@ -1,0 +1,59 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@font-face {
+    font-family: 'Heming Variable'; /* use the font's name */
+    src: url('/assets/heming-variable.ttf') format('truetype'); /* path to your font file */
+    font-weight: normal;
+    font-style: normal;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    @apply w-1.5 h-2 z-50 bg-gray-200;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-dark-primary z-50 rounded;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-200 z-50;
+}
+
+
+.scale-in-tr {
+    -webkit-animation: scale-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    animation: scale-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@-webkit-keyframes scale-in-tr {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        -webkit-transform-origin: 100% 0%;
+        transform-origin: 100% 0%;
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transform-origin: 100% 0%;
+        transform-origin: 100% 0%;
+        opacity: 1;
+    }
+}
+@keyframes scale-in-tr {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+        -webkit-transform-origin: 100% 0%;
+        transform-origin: 100% 0%;
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transform-origin: 100% 0%;
+        transform-origin: 100% 0%;
+        opacity: 1;
+    }
+}
