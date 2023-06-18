@@ -61,7 +61,7 @@ const ProductList = () => {
                         <span><FontAwesomeIcon icon={faTag} className="mx-2" />new_product_schema_</span>
                         <div className='mt-8'>
                             {_.map(fields, (item) => (
-                                <div className='flex flex-col'>
+                                <div key={item.label} className='flex flex-col'>
                                     <label>{item.label}</label>
                                     <input className='rounded-xl pl-2 bg-light-secondary' type={item.type} name={item.name} onChange={handleChange} />
                                 </div>

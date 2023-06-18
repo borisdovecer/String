@@ -18,7 +18,7 @@ const TransferTable = ({data, handleSelectChange}: any) => {
                 </thead>
                 <tbody className='overflow-y-auto'>
                 {_.map(data, (id) => (
-                    <tr className={`${theme ? "bg-light-primary text-dark-secondary" : "bg-dark-tertiary text-light-primary"} px-2 md:px-4 py-2 text-center`}>
+                    <tr key={id} className={`${theme ? "bg-light-primary text-dark-secondary" : "bg-dark-tertiary text-light-primary"} px-2 md:px-4 py-2 text-center`}>
                         <td><input onChange={handleSelectChange} type='checkbox' id={id} /></td>
                         <td>{id}</td>
                         <td>ps4</td>

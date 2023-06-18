@@ -1,4 +1,5 @@
 import _ from "lodash";
+import moment from "moment";
 import { ProductCard } from "./";
 import axios from "@app/config/axios.ts";
 import { useSelector } from "react-redux";
@@ -33,6 +34,18 @@ const ProductDetails = () => {
         console.log(response);
     }
 
+    const formatValue = (value:any) => {
+        if (typeof value === 'boolean') {
+            return value ? 'Yes' : 'No'
+        }
+
+        if (moment(value, moment.ISO_8601, true).isValid()) {
+            return moment(value).format('DD/MM/YYYY');
+        }
+
+        return value
+    }
+
     return (
         <div className='my-8 w-full'>
             <ComponentWrapper title={data[0]} icon={faBoxOpen}>
@@ -55,7 +68,7 @@ const ProductDetails = () => {
                             {_.map(metadata.attributes, (item) => (
                                 <div className='w-full flex flex-row justify-between'>
                                     <p>{item.trait_type}</p>
-                                    <p>{item.value.toString()}</p>
+                                    <p>{formatValue(item.value)}</p>
                                 </div>
                             ))}
                         </div>
