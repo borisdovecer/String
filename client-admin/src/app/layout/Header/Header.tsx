@@ -3,8 +3,6 @@ import { toggleTheme } from "@app/config/configReducer.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon, faUser, faWallet } from '@fortawesome/free-solid-svg-icons';
 import { useEthers } from "@usedapp/core";
-import StringNFT from "@app/abi/StringNFT.json";
-import { Contract } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { contract } from "@app/config/chainConfig.ts";
@@ -14,24 +12,8 @@ const Header = () => {
     const dispatch = useDispatch();
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLSpanElement>(null);
-    const [contractName, setContractName] = useState<string>('')
 
-    const { activateBrowserWallet, account, library }:any = useEthers();
-    const [contractInstance, setContractInstance] = useState<Contract | null>(null);
-
-    useEffect(() => {
-        if(library){
-            setContractInstance(new Contract(contract.address, StringNFT.abi, library));
-        }
-    }, [library]);
-
-    useEffect(() => {
-        contractInstance?.name().then((res:string) => setContractName(res))
-    }, [contractInstance])
-
-    const connectWallet = () => {
-        activateBrowserWallet();
-    };
+    const { account } = useEthers();
 
     const handleThemeToggleClick = () => {
         dispatch(toggleTheme());

@@ -1,8 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import configReducer from "@app/config/configReducer.ts";
+import config from "@app/config/configReducer.ts";
+import contract from "@app/config/ContractSlice.ts";
 
-export default configureStore({
+export const store = configureStore({
     reducer: {
-        config: configReducer
+        config,
+        contract
     },
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

@@ -2,6 +2,7 @@ import {useEthers} from "@usedapp/core";
 
 const ConnectWallet = () => {
     const { activateBrowserWallet } = useEthers();
+
     const connectWallet = () => {
         activateBrowserWallet();
     };
