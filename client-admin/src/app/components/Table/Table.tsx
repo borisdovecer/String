@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import {useSelector} from "react-redux";
-import {Link} from "react-router-dom";
 import moment from "moment";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@app/store/store.ts";
 
 const Table = ({ data }:any) => {
-    const headers = Object.keys(data[0]);
-
-    const theme = useSelector((state:any) => state.config.theme);
+    const headers: string[] = Object.keys(data[0]);
+    const theme = useSelector((state: RootState) => state.config.theme);
 
     const cellFormat = (row:any, header: string) => {
         if (header === 'timeStamp') {
@@ -48,12 +48,9 @@ const Table = ({ data }:any) => {
             <div className="overflow-x-auto custom-scrollbar mt-6 rounded-3xl">
                 <table className="w-full">
                     <thead>
-                    <tr className='rounded-2xl'>
+                    <tr className={`${!theme ? 'bg-dark-secondary text-light-primary' : 'bg-light-secondary text-dark-primary'} rounded-2xl px-2 md:px-4 py-2 font-bold cursor-pointer`}>
                         {headers.map((header) => (
-                            <th
-                                key={header}
-                                className={`${!theme ? 'bg-dark-secondary text-light-primary' : 'bg-light-secondary text-dark-primary'} px-2 md:px-4 py-2 font-bold cursor-pointer`}
-                            >
+                            <th key={header}>
                                 {_.startCase(header)}
                             </th>
                         ))}
