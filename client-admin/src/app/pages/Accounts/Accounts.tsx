@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { useSelector } from "react-redux";
 import { useEffect, useState} from "react";
+import { RootState } from '@app/store/store.ts';
+import { useContractFunction } from "@usedapp/core";
 import { ComponentWrapper, Table } from "@app/components";
-import { useContractFunction, useEthers } from "@usedapp/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBuilding, faUsers } from "@fortawesome/free-solid-svg-icons";
-import { RootState } from '@app/store/store.ts';
 
 const Accounts = () => {
     const contractInstance = useSelector((state: RootState) => state.contract.instance);
@@ -15,28 +15,19 @@ const Accounts = () => {
     const [address, setAddress] = useState<string>('');
     const [role, setRole] = useState<number>(0);
 
-    const { activateBrowserWallet, account } = useEthers();
     const addEmployee = useContractFunction(contractInstance, 'addEmployeeToCompany', {});
     const removeEmployee = useContractFunction(contractInstance, 'removeEmployee', {});
 
     useEffect(() => {
-        contractInstance?.getAllEmployeesInCompany(0).then((res:string) => setEmployees(res));
+        contractInstance?.getAllEmployeesInCompany(1).then((res:string) => setEmployees(res));
         contractInstance?.getCompanyById(1).then((res:string) => setCompany(res));
     }, [contractInstance]);
 
     const handleAddEmployee = async () => {
-        if (!account) {
-            await activateBrowserWallet();
-            return;
-        }
         addEmployee.send(1, address, role).then((res) => console.log(res));
     };
     const handleRemoveEmployee = async () => {
         const { send } = removeEmployee
-        if (!account) {
-            await activateBrowserWallet();
-            return;
-        }
         send(address).then((res) => console.log(res));
     };
 
