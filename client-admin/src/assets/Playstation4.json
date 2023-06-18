@@ -1,0 +1,43 @@
+{
+  "name": "Playstaton 4",
+  "description": "Četvorka kida, jaka mašina, jailbreakovana, nemam zamerki",
+  "image": "QmWcRwEo5mEiXBWmhFzN7c4yFweHRcVBztu4VEU8QchBdt",
+  "attributes": [
+    {
+      "trait_type": "Manufacturer",
+      "value": "Sony"
+    },
+    {
+      "trait_type": "Country of origin",
+      "value": "Japan"
+    },
+    {
+      "trait_type": "Date of expiry",
+      "value": "3377-01-01T00:00:00",
+      "display_type": "date"
+    },
+    {
+      "trait_type": "Warranty expire date",
+      "value": "2142-06-04T00:00:00",
+      "display_type": "date"
+    },
+    {
+      "trait_type": "Is Recyclable",
+      "value": false,
+      "display_type": "boolean"
+    },
+    {
+      "trait_type": "Limited Edition",
+      "value": true,
+      "display_type": "boolean"
+    }
+  ],
+  "properties": {
+    "creators": [
+      {
+        "address": "0xA6c4e91e3Ed59e1A893e0C9c8bb8cAD8e775B1C9",
+        "share": 100
+      }
+    ]
+  }
+}

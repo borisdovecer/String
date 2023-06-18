@@ -1,46 +1,38 @@
 import _ from "lodash";
-import { Contract } from "ethers";
+import { ProductCard } from "./";
 import { fields } from './fields.ts';
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import StringNFT from "@app/abi/StringNFT.json";
+import { RootState } from "@app/store/store.ts";
 import { ComponentWrapper } from "@app/components";
-import { contract } from "@app/config/chainConfig.ts";
-import { useContractFunction, useEthers } from "@usedapp/core";
+import { useContractFunction } from "@usedapp/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxOpen, faTag } from "@fortawesome/free-solid-svg-icons";
-import axios from "@app/config/axios.ts";
+
+interface IProduct {
+    name: string,
+    metadata: string
+}
 
 const ProductList = () => {
+    const contractInstance = useSelector((state: RootState) => state.contract.instance);
     const [formData, setFormData] = useState<any>({});
-    const [products, setProducts] = useState(null);
-    const { account, library }:any = useEthers();
-    const [contractInstance, setContractInstance] = useState<Contract | null>(null);
+    const [products, setProducts] = useState<IProduct[] | null>(null);
     const { send } = useContractFunction(contractInstance, 'addProductToCompany', {});
 
     useEffect(() => {
-        if(account && library){
-            setContractInstance(new Contract(contract.address, StringNFT.abi, library.getSigner()));
-        }
-    }, [account, library]);
-
-    useEffect(() => {
         contractInstance?.getAllProducts(0).then((res:any) => {
-            setProducts(res);
+            const mapped = _.map(res, (item): IProduct => {
+                return {
+                    name: item[0],
+                    metadata: item[1]
+                }
+            });
+            const uniqItems: IProduct[] = _.uniqBy(mapped, 'name')
+            setProducts(uniqItems);
         })
     }, [contractInstance]);
-
-    useEffect(() => {
-        if (products) {
-            const ee = (products?.[2][1]);
-
-            const splitted = (_.split(ee, '/'))
-            axios.get(`https://ipfs.io/ipfs/${splitted[2]}/${splitted[3]}`).then((res) => {
-                console.log(res)
-            })
-
-        }
-    }, [products])
 
     const handleChange = (e:any) => {
         const { name, value } = e.target;
@@ -49,7 +41,7 @@ const ProductList = () => {
 
     const handleSubmit = () => {
         const { name, metadata } = formData;
-        send(0, name, metadata).then((res) => console.log(res))
+        send(1, name, metadata).then((res) => console.log(res))
     }
 
     return (
@@ -58,14 +50,10 @@ const ProductList = () => {
                 <div className='flex flex-row space-x-4'>
                     <div className='w-full max-h-[700px] custom-scrollbar overflow-y-scroll'>
                         <div className="grid grid-cols-3 gap-4 py-4">
-                            {products && _.map(products, (item:any, index:number) => (
-                                <Link to={`/products/${item[0]}`}>
-                                    <div key={index} className="flex justify-center items-center relative">
-                                        <span className='absolute top-1'>{item[0]}</span>
-                                        <img className="w-48 h-48 object-cover rounded-3xl" src='https://via.placeholder.com/150' alt="Example" />
-                                    </div>
+                            {products && _.map(products, (item:IProduct) => (
+                                <Link key={item.name} to={`/products/${item.name}`} >
+                                    <ProductCard item={item} />
                                 </Link>
-
                             ))}
                         </div>
                     </div>
