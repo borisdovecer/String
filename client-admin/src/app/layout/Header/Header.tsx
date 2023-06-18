@@ -57,14 +57,14 @@ const Header = () => {
             <div className='flex flex-row items-center'>
                 <div className={`w-12 ${theme ? 'bg-dark-primary' : 'bg-light-primary'} h-1`} />
                 <div className='pl-4 font-bold text-2xl'>
-                    {contractName}
+                    String
                 </div>
             </div>
             <div className='flex flex-row items-center'>
                 <div className='flex flex-row'>
                     <div className='px-2 rounded-3xl'>
                         <FontAwesomeIcon icon={faWallet} className='mx-2' />
-                        <span >{shortenAddress}</span>
+                        <span>{shortenAddress}</span>
                     </div>
 
                     <span className="ml-4">
@@ -79,9 +79,7 @@ const Header = () => {
                     }
                     </span>
                     {!account ?
-                        <button className='mr-4 px-4 border rounded-xl' onClick={connectWallet}>
-                            _connect wallet
-                        </button>
+                        <></>
                         :
                         <span ref={dropdownRef} className="px-4">
                             <FontAwesomeIcon icon={faUser} onClick={() => setIsDropdownOpen(!isDropdownOpen)} />

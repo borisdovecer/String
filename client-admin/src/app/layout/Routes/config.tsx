@@ -9,6 +9,7 @@ import {
     Settings,
     ProductList,
     Accounts,
+    Register,
 } from "@app/pages";
 
 export interface IRoutes {
@@ -31,6 +32,7 @@ export const routeConfig: IRoutes[] = [
 
 export const routeBasic: IRoutes[] = [
     { id: 'home', path:'/', element: <Home /> },
+    { id: 'register', path:'/register', element: <Register /> },
     { id: 'support', path:'/support', element: <Support /> },
     { id: 'error', path:'*', element: <ErrorPage /> }
 ];

@@ -4,7 +4,9 @@ import { io } from "socket.io-client";
 
 interface IProps {
     serverURL: string,
-    onVerificationResult: any
+    onVerificationResult: any,
+    credentialType?: string,
+    issuerLink?: string
 }
 
 const PolygonIDVerifier = ({ serverURL, onVerificationResult }: IProps) => {
