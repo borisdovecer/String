@@ -2,10 +2,15 @@ import { useState, useEffect } from "react";
 import QRCode from "react-qr-code";
 import { io } from "socket.io-client";
 
-const PolygonIDVerifier = ({ serverURL, onVerificationResult }:any) => {
-    const [sessionId, setSessionId] = useState<any>("");
+interface IProps {
+    serverURL: string,
+    onVerificationResult: any
+}
+
+const PolygonIDVerifier = ({ serverURL, onVerificationResult }: IProps) => {
+    const [sessionId, setSessionId] = useState<string>("");
     const [qrCodeData, setQrCodeData] = useState<any>(null);
-    const [verificationMessage, setVerificationMessage] = useState<any>("");
+    const [verificationMessage, setVerificationMessage] = useState<string>("");
     const [socketEvents, setSocketEvents] = useState<any>([]);
 
     const socket = io(serverURL);
@@ -14,7 +19,6 @@ const PolygonIDVerifier = ({ serverURL, onVerificationResult }:any) => {
         socket.on("connect", () => {
             setSessionId(socket.id);
 
-            // only watch this session's events
             socket.on(socket.id, (arg:any) => {
                 setSocketEvents((prevEvents:any) => [...prevEvents, arg]);
             });
@@ -31,15 +35,15 @@ const PolygonIDVerifier = ({ serverURL, onVerificationResult }:any) => {
         handleSocketEventSideEffects();
     }, [socketEvents]);
 
-    const getQrCodeApi = (sessionId:any) => serverURL + `/api/get-auth-qr?sessionId=${sessionId}`;
+    const getQrCodeApi = (sessionId: string): string => serverURL + `/api/get-auth-qr?sessionId=${sessionId}`;
 
-    const fetchQrCode = async () => {
+    const fetchQrCode = async ():Promise<void> => {
         const response = await fetch(getQrCodeApi(sessionId));
         const data = await response.text();
         setQrCodeData(JSON.parse(data));
     };
 
-    const handleSocketEventSideEffects = () => {
+    const handleSocketEventSideEffects = (): void => {
         if (socketEvents.length) {
             const currentSocketEvent:any = socketEvents[socketEvents.length - 1];
 

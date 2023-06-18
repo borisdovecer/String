@@ -1,9 +1,14 @@
 const initialState = {
     theme: true,
+    provedAccessBirthday: false
 }
 
 export const toggleTheme = () => ({
     type: 'TOGGLE_THEME'
+});
+
+export const setProvedAccessBirthday = () => ({
+    type: 'PROVE_BIRTHDAY'
 });
 
 const configReducer = (state = initialState, action:any) => {
@@ -12,6 +17,11 @@ const configReducer = (state = initialState, action:any) => {
             return {
                 ...state,
                 theme: !state.theme
+            };
+        case 'PROVE_BIRTHDAY':
+            return {
+                ...state,
+                provedAccessBirthday: true
             };
         default:
             return state;

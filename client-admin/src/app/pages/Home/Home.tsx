@@ -1,14 +1,18 @@
 import { useEthers } from "@usedapp/core";
 import PolygonIDVerifier from "@app/services/PolygonIDVerifier.tsx";
-import {useState} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setProvedAccessBirthday } from "@app/config/configReducer.ts";
+import ConnectWallet from "@app/pages/Home/ConnectWallet.tsx";
+import Welcome from "@app/pages/Home/Welcome.tsx";
 
 const Home = () => {
-    const [provedAccessBirthday, setProvedAccessBirthday] = useState(false);
-    const { activateBrowserWallet, account }:any = useEthers();
+    const provedAccessBirthday = useSelector((state:any) => state.config.provedAccessBirthday);
+    const dispatch = useDispatch();
+    const { account } = useEthers();
 
-    const connectWallet = () => {
-        activateBrowserWallet();
-    };
+    const verify = () => {
+        dispatch(setProvedAccessBirthday())
+    }
 
     return (
         <div className='my-8 w-full text-center'>
@@ -21,23 +25,14 @@ const Home = () => {
                             issuerLink={
                                 "https://oceans404.notion.site/How-to-get-a-Verifiable-Credential-f3d34e7c98ec4147b6b2fae79066c4f6?pvs=4"
                             }
-                            onVerificationResult={setProvedAccessBirthday}
+                            onVerificationResult={() => verify()}
                         />
                         :
-                        <div>
-                            <p>Please, connect your wallet</p>
-                            <button className='mr-4 px-4 border rounded-xl' onClick={connectWallet}>
-                                _connect wallet
-                            </button>
-                        </div>
+                        <ConnectWallet />
                     }
-
                 </div>
                 :
-                <div>
-                    <p>Hello, {provedAccessBirthday && account}</p>
-
-                </div>
+                <Welcome />
             }
         </div>
     )
