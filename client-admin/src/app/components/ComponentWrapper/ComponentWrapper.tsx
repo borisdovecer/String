@@ -10,7 +10,7 @@ const ComponentWrapper = ({children, title, icon}: any) => {
             <div className='flex flex-row mt-4 justify-between'>
                 <div className='flex flex-row'>
                     <FontAwesomeIcon icon={icon} className="ml-4 mt-1" />
-                    <p className={`pl-2`}>{title}</p>
+                    <p className={`pl-2 font-semibold`}>{title}</p>
                 </div>
                 <div className='mr-4'>
                     <FontAwesomeIcon icon={faSearch} className="mx-2" />

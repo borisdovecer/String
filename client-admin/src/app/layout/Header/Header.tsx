@@ -39,7 +39,7 @@ const Header = () => {
             <div className='flex flex-row items-center'>
                 <div className={`w-12 ${theme ? 'bg-dark-primary' : 'bg-light-primary'} h-1`} />
                 <div className='pl-4 font-bold text-2xl'>
-                    String
+                    string
                 </div>
             </div>
             <div className='flex flex-row items-center'>

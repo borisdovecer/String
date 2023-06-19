@@ -23,7 +23,7 @@ const App = () =>  {
     }, [account, library, dispatch]);
 
     return (
-      <div className={`w-full h-screen ${theme ? 'bg-light-primary text-dark-primary' : 'bg-dark-primary text-light-primary'}`}>
+      <div className={`w-full h-screen fontHeming ${theme ? 'bg-light-primary text-dark-primary' : 'bg-dark-primary text-light-primary'}`}>
         <BrowserRouter>
             <Layout />
         </BrowserRouter>

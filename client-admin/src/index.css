@@ -2,11 +2,16 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 @font-face {
-    font-family: 'Heming Variable'; /* use the font's name */
-    src: url('/assets/heming-variable.ttf') format('truetype'); /* path to your font file */
+    font-family: 'Heming';
+    src: url('./assets/heming-variable.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
+
+.fontHeming {
+    font-family: 'Heming', sans-serif;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
     @apply w-1.5 h-2 z-50 bg-gray-200;
 }
