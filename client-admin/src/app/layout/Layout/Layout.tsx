@@ -7,7 +7,7 @@ import AppRoutes from "@app/layout/Routes/AppRoutes.tsx";
 const Layout = () => {
     const theme = useAppSelector((state:any) => state.config.theme);
     const { account } = useEthers();
-    const [openSidebar, setOpenSidebar] = useState<boolean>(true);
+    const [openSidebar, setOpenSidebar] = useState<boolean>(false);
 
     return (
         <div className={`${theme ? 'bg-light-secondary' : 'bg-dark-secondary'} flex`}>
