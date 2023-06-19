@@ -13,13 +13,15 @@ module.exports = {
       colors: {
         light: {
           primary: '#ffffff',
-          secondary: '#e2e2e2',
-          tertiary: '#bdbdbd',
+          secondary: '#f2f2f2',
+          tertiary: '#e0e0e0',
+          quaternary: '#d0d0d0',
         },
         dark: {
-          primary: '#282828',
-          secondary: '#212121',
-          tertiary: '#000000'
+          primary: '#000000',
+          secondary: '#333333',
+          tertiary: '#666666',
+          quaternary: '#999999',
         },
       },
     },

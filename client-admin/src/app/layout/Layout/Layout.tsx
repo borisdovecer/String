@@ -7,19 +7,22 @@ import AppRoutes from "@app/layout/Routes/AppRoutes.tsx";
 const Layout = () => {
     const theme = useAppSelector((state:any) => state.config.theme);
     const { account } = useEthers();
-    const [openSidebar, setOpenSidebar] = useState(false);
+    const [openSidebar, setOpenSidebar] = useState<boolean>(true);
 
     return (
-        <div className='flex'>
+        <div className={`${theme ? 'bg-light-secondary' : 'bg-dark-secondary'} flex`}>
             <Header />
             {account &&
-                <div className={`${openSidebar ? 'w-1/6' : 'w-16'}`}>
+                <div className={`transition-all duration-500 ease-in-out ${openSidebar ? 'w-64' : 'w-16'}`}>
                     <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
                 </div>
             }
             <div className='w-full custom-scrollbar overflow-y-scroll'>
-                <div className={`${theme ? 'bg-light-secondary' : 'bg-dark-secondary'} h-screen px-4 py-12`}>
-                    <AppRoutes />
+                <div className='h-screen px-4 py-12'>
+                    <div className=''>
+                        <AppRoutes />
+                    </div>
+                    {/*<div className='w-screen absolute top-1/2 left-0 h-2 bg-dark-primary'>...</div>*/}
                 </div>
             </div>
         </div>

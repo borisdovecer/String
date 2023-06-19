@@ -22,22 +22,22 @@ const Home = () => {
         <div className='my-8 text-center'>
             {!account ?
                 <>
-                    <div className='flex flex-row justify-between w-1/2 mx-auto'>
+                    <div className='flex flex-row justify-between w-1/2 mx-auto space-x-16'>
                         <div className='w-1/2 '>
                             <div className='py-6 text-xl'>
-                                <h1 className='text-3xl text-left'>
-                                    Welcome to String platform...
+                                <h1 className='text-3xl text-center'>
+                                    string
                                 </h1>
                                 <div className='pt-12 flex flex-col space-y-8'>
                                     <Link to='/support'>
-                                        <button className='border-2 border-black px-4 rounded-3xl'>
-                                            Help
+                                        <button className='border-2 border-black w-1/2 rounded-3xl'>
+                                            support
                                         </button>
                                     </Link>
                                     {provedAccessBirthday &&
                                         <Link to='/register'>
-                                            <button className='border-2 border-black px-4 rounded-3xl'>
-                                                Register company
+                                            <button className='border-2 border-black w-1/2 rounded-3xl'>
+                                                register company
                                             </button>
                                         </Link>
                                     }
@@ -58,12 +58,12 @@ const Home = () => {
                                         />
                                         :
                                         <div className='py-6 text-xl' onClick={() => setShowQR(true)} >
-                                            <h1 className='text-3xl text-left'>
-                                                Unlock Your products story...
+                                            <h1 className='text-3xl text-center'>
+                                                unlock your product story
                                             </h1>
                                             <div className='pt-12'>
-                                                <button className='border-2 border-black px-4 rounded-3xl'>
-                                                    Verify with Polygon ID
+                                                <button className='border-2 border-black w-full rounded-3xl'>
+                                                    verify with polygon id
                                                 </button>
                                             </div>
                                         </div>

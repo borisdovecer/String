@@ -70,7 +70,9 @@ const PolygonIDVerifier = ({ serverURL, onVerificationResult }: IProps) => {
     return (
         <div>
             {sessionId && qrCodeData ?
-                <QRCode value={JSON.stringify(qrCodeData)} size={420} />
+                <div className='p-4 bg-light-secondary'>
+                    <QRCode value={JSON.stringify(qrCodeData)} size={420} />
+                </div>
                 :
                 <div className="flex justify-center items-center h-[240px]">
                     <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-gray-500"></div>

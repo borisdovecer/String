@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {
     faHome,
     faTachometerAlt,
@@ -10,7 +10,6 @@ import {
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
-import { useAppSelector } from "@app/store/hooks.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface IItem {
@@ -30,16 +29,22 @@ const items: IItem[] = [
 ];
 
 const Sidebar = ({openSidebar, setOpenSidebar}:any) => {
-    const theme = useAppSelector((state:any) => state.config.theme);
     const location = useLocation()
     const [activeItem, setActiveItem] = useState<string>(_.split(location.pathname, '/')[1]);
-
+    const [delayedText, setDelayedText] = useState(false)
     const handleItemClick = (itemId: string) => {
         setActiveItem(itemId);
     };
 
+    useEffect(() => {
+        setTimeout(() => {
+            setDelayedText(openSidebar);
+        },300)
+
+    }, [openSidebar])
+
     return (
-        <div className={`${!theme ? 'border-dark-primary text-light-primary' : 'bg-dark-secondary'} w-full z-10 h-screen pt-4 px-2 border-r`}>
+        <div className={`bg-dark-primary z-10 h-screen pt-4 px-2`}>
             <div className='flex justify-left text-light-primary mt-12 ml-3 text-xl'>
                 <FontAwesomeIcon icon={faBars} onClick={() => setOpenSidebar(!openSidebar)} />
             </div>
@@ -48,7 +53,11 @@ const Sidebar = ({openSidebar, setOpenSidebar}:any) => {
                     <li key={index} onClick={() => handleItemClick(item.id)}>
                         <Link to={item.link}  className={`text-xl text-light-primary pl-2 hover:border-l-2 ${activeItem === item.id ? 'border-l-2 font-extrabold' : ''}`}>
                             <FontAwesomeIcon icon={item.icon} className="mr-4" />
-                            {openSidebar && <span>{item.text}</span>}
+                            {delayedText &&
+                                <span className='transition-opacity duration-500 ease-in-out'>
+                                  {openSidebar && item.text}
+                                </span>
+                            }
                         </Link>
                     </li>
                 ))}
@@ -56,5 +65,6 @@ const Sidebar = ({openSidebar, setOpenSidebar}:any) => {
         </div>
     )
 }
+
 
 export default Sidebar;

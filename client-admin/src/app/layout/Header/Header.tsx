@@ -35,7 +35,7 @@ const Header = () => {
     const shortenAddress = account ? `${account.slice(0, 5)}...${account.slice(account.length - 4)}` : '';
 
     return (
-        <div className={`${!theme ? 'bg-dark-tertiary' : 'bg-light-primary'} text-lg w-full flex justify-between items-center h-10 fixed z-50 rounded-b-xl`}>
+        <div className={`${!theme ? 'bg-dark-primary shadow-dark-tertiary shadow-sm' : 'bg-light-primary'} text-lg w-full flex justify-between items-center h-10 fixed z-50 rounded-b-xl`}>
             <div className='flex flex-row items-center'>
                 <div className={`w-12 ${theme ? 'bg-dark-primary' : 'bg-light-primary'} h-1`} />
                 <div className='pl-4 font-bold text-2xl'>

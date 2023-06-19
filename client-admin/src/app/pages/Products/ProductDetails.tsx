@@ -9,6 +9,7 @@ import { useAppSelector } from "@app/store/hooks.ts";
 import { faBoxOpen} from "@fortawesome/free-solid-svg-icons";
 
 const ProductDetails = () => {
+    const theme = useAppSelector((state:any) => state.config.theme);
     const contractInstance = useAppSelector((state) => state.contract.instance);
     const [data, setData] = useState<any>({});
     const [metadata, setMetadata] = useState<any>({});
@@ -54,7 +55,7 @@ const ProductDetails = () => {
                         <div className='w-2/12'>
                             <ProductCard item={{name: '', metadata:data[1]}} />
                         </div>
-                        <div className='w-full bg-light-primary text-dark-secondary p-4 text-xl rounded-3xl'>
+                        <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} w-full text-dark-secondary p-4 text-xl rounded-3xl`}>
                             <p>{metadata.name}</p>
                             <p>{metadata.description}</p>
                             <div className='flex'>
@@ -63,7 +64,7 @@ const ProductDetails = () => {
                         </div>
                     </div>
                     <div className='w-full flex flex-row mt-8 space-x-4'>
-                        <div className='w-1/3 bg-light-primary text-dark-secondary p-4 text-xl rounded-3xl'>
+                        <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} w-1/3 text-dark-secondary p-4 text-xl rounded-3xl`}>
                             {_.map(metadata.attributes, (item) => (
                                 <div className='w-full flex flex-row justify-between'>
                                     <p>{item.trait_type}</p>
@@ -71,7 +72,7 @@ const ProductDetails = () => {
                                 </div>
                             ))}
                         </div>
-                        <div className='w-2/3 bg-light-primary text-dark-secondary p-4 text-xl rounded-3xl'>
+                        <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} w-2/3 text-dark-secondary p-4 text-xl rounded-3xl`}>
                             <div>
                                 <p>NFTs Minted for this product_</p>
                             </div>

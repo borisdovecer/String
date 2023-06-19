@@ -8,7 +8,6 @@ import { faBuilding, faUsers } from "@fortawesome/free-solid-svg-icons";
 
 const Accounts = () => {
     const contractInstance: any = useAppSelector((state) => state.contract.instance);
-    const theme: boolean = useAppSelector((state) => state.config.theme);
     const [employees, setEmployees] = useState<any>([])
     const [company, setCompany] = useState<any>([])
     const [address, setAddress] = useState<string>('');
@@ -60,13 +59,13 @@ const Accounts = () => {
             <ComponentWrapper title='Acount Management' icon={faUsers}>
                 <div className='flex flex-row space-x-4 text-black'>
                     <div className='w-3/4'>
-                        <div className={`${theme ? 'bg-light-primary text-dark-primary' : 'bg-dark-primary text-light-primary' } text-black rounded-3xl h-min-full`}>
+                        <div className={`bg-light-secondary text-dark-primary rounded-3xl h-min-full`}>
                             {!_.isEmpty(uniqueAddresses) && <Table data={uniqueAddresses}/>}
                         </div>
                     </div>
-                    <div className={`${theme ? 'bg-light-primary text-dark-primary' : 'bg-dark-primary text-light-primary' } w-1/4  mt-6 rounded-3xl `}>
+                    <div className={`bg-light-primary text-dark-primary w-1/4  mt-6 rounded-3xl `}>
                         <div className="rounded-3xl">
-                            <div className={`${theme ? 'bg-light-secondary' : 'bg-dark-secondary'} rounded-3xl px-2 py-2`}>
+                            <div className={`bg-light-secondary text-dark-primary rounded-3xl px-2 py-2`}>
                                 <h2 className="text-xl font-semibold"><FontAwesomeIcon icon={faBuilding} className="mx-2" />{company[0]}</h2>
                             </div>
                             <div className="mt-4">
@@ -79,7 +78,7 @@ const Accounts = () => {
                         </div>
                     </div>
                 </div>
-                <div className={`${theme ? 'bg-light-primary text-dark-primary' : 'bg-dark-primary text-light-primary'} flex flex-row space-x-4 text-black py-8 text-lg font-bold justify-between rounded-3xl mt-4 h-8 items-center`}>
+                <div className={`bg-light-primary text-dark-primary flex flex-row space-x-4 py-8 text-lg font-bold justify-between rounded-3xl mt-4 h-8 items-center`}>
                     <div className='w-full flex justify-between items-center'>
                         <input onChange={handleChange} className='text-black border-black border mx-8 pl-2 w-2/3 rounded-xl' type='text' placeholder='Address' />
                         <select onChange={handleSelectChange} className='border-black border mx-8 pl-2 w-1/2 rounded-xl'>
@@ -90,10 +89,10 @@ const Accounts = () => {
                         </select>
                     </div>
                     <div className='w-1/3 flex flex-row space-x-6 px-4'>
-                        <button onClick={handleAddEmployee} className={`${theme ? 'bg-dark-primary text-light-primary' : 'bg-light-primary text-dark-primary'} px-4 rounded-2xl`}>
+                        <button onClick={handleAddEmployee} className={`bg-dark-primary text-light-primary px-4 rounded-2xl`}>
                             add employee
                         </button>
-                        <button onClick={handleRemoveEmployee} className={`${theme ? 'bg-dark-primary text-light-primary' : 'bg-light-primary text-dark-primary'} px-4 rounded-2xl`}>
+                        <button onClick={handleRemoveEmployee} className={`bg-dark-primary text-light-primary px-4 rounded-2xl`}>
                             remove employee
                         </button>
                     </div>

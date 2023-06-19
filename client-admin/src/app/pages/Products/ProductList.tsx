@@ -15,6 +15,7 @@ interface IProduct {
 }
 
 const ProductList = () => {
+    const theme = useAppSelector((state:any) => state.config.theme);
     const contractInstance = useAppSelector((state) => state.contract.instance);
     const [formData, setFormData] = useState<any>({});
     const [products, setProducts] = useState<IProduct[] | null>(null);
@@ -56,13 +57,13 @@ const ProductList = () => {
                             ))}
                         </div>
                     </div>
-                    <div className='bg-light-primary w-full text-black rounded-2xl p-4'>
+                    <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} w-full text-black rounded-2xl p-4`}>
                         <span><FontAwesomeIcon icon={faTag} className="mx-2" />new_product_schema_</span>
                         <div className='mt-8'>
                             {_.map(fields, (item) => (
                                 <div key={item.label} className='flex flex-col'>
                                     <label>{item.label}</label>
-                                    <input className='rounded-xl pl-2 bg-light-secondary' type={item.type} name={item.name} onChange={handleChange} />
+                                    <input className={`${theme ? 'bg-light-secondary' : 'bg-light-tertiary'} rounded-xl pl-2`} type={item.type} name={item.name} onChange={handleChange} />
                                 </div>
                             ))}
                         </div>
