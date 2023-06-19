@@ -1,7 +1,7 @@
 import { FC } from 'react';
+import { useEthers } from "@usedapp/core";
 import { Routes, Route } from 'react-router-dom';
 import {IRoutes, routeBasic, routeConfig} from './config.tsx';
-import {useEthers} from "@usedapp/core";
 
 const AppRoutes: FC = () => {
     const { account } = useEthers();

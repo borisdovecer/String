@@ -2,15 +2,14 @@ import _ from "lodash";
 import moment from "moment";
 import { ProductCard } from "./";
 import axios from "@app/config/axios.ts";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { RootState } from "@app/store/store.ts";
 import { ComponentWrapper } from "@app/components";
 import { useContractFunction } from "@usedapp/core";
+import { useAppSelector } from "@app/store/hooks.ts";
 import { faBoxOpen} from "@fortawesome/free-solid-svg-icons";
 
 const ProductDetails = () => {
-    const contractInstance = useSelector((state: RootState) => state.contract.instance);
+    const contractInstance = useAppSelector((state) => state.contract.instance);
     const [data, setData] = useState<any>({});
     const [metadata, setMetadata] = useState<any>({});
     const { send } = useContractFunction(contractInstance, 'mint', {});

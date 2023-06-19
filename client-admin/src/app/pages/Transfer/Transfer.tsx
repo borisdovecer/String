@@ -1,15 +1,13 @@
 import _ from "lodash";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { RootState } from "@app/store/store.ts";
 import { useContractFunction, useEthers } from "@usedapp/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowAltCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { ComponentWrapper, TransferTable, EmployeeTable } from "@app/components";
+import { useAppSelector } from "@app/store/hooks.ts";
 
 const Transfer = () => {
-    // const theme = useSelector((state: RootState) => state.config.theme);
-    const contractInstance = useSelector((state: RootState) => state.contract.instance);
+    const contractInstance = useAppSelector((state) => state.contract.instance);
     const [transactions, setTransactions] = useState<any>(null);
     const [employees, setEmployees] = useState<any>(null)
     const [selected, setSelected] = useState<number[]>([])

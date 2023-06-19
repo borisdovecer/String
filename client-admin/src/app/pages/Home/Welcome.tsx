@@ -1,7 +1,7 @@
-import {ComponentWrapper} from "@app/components";
-import {faHome, faUserCheck, faExchangeAlt, faCoins, faCheckCircle} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Link} from "react-router-dom";
+import { ComponentWrapper } from "@app/components";
+import { faHome, faUserCheck, faExchangeAlt, faCoins, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 
 const Welcome = () => {
     return (

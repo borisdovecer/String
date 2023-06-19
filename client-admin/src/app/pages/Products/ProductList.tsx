@@ -2,13 +2,12 @@ import _ from "lodash";
 import { ProductCard } from "./";
 import { fields } from './fields.ts';
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { RootState } from "@app/store/store.ts";
 import { ComponentWrapper } from "@app/components";
 import { useContractFunction } from "@usedapp/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxOpen, faTag } from "@fortawesome/free-solid-svg-icons";
+import { useAppSelector } from "@app/store/hooks.ts";
 
 interface IProduct {
     name: string,
@@ -16,7 +15,7 @@ interface IProduct {
 }
 
 const ProductList = () => {
-    const contractInstance = useSelector((state: RootState) => state.contract.instance);
+    const contractInstance = useAppSelector((state) => state.contract.instance);
     const [formData, setFormData] = useState<any>({});
     const [products, setProducts] = useState<IProduct[] | null>(null);
     const { send } = useContractFunction(contractInstance, 'addProductToCompany', {});

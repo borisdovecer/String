@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "@app/store/store.ts";
+import { RootState } from "@app/store";
+import { useAppSelector } from "@app/store/hooks.ts";
 
 const Table = ({ data }:any) => {
     const headers: string[] = Object.keys(data[0]);
-    const theme = useSelector((state: RootState) => state.config.theme);
+    const theme = useAppSelector((state: RootState) => state.config.theme);
 
     const cellFormat = (row:any, header: string) => {
         if (header === 'timeStamp') {

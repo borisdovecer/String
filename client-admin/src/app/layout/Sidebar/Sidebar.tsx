@@ -1,3 +1,5 @@
+import _ from "lodash";
+import { useState } from "react";
 import {
     faHome,
     faTachometerAlt,
@@ -7,18 +9,16 @@ import {
     faBars,
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
+import { Link, useLocation } from "react-router-dom";
+import { useAppSelector } from "@app/store/hooks.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {Link, useLocation} from "react-router-dom";
-import _ from "lodash";
-import {useSelector} from "react-redux";
-import {useState} from "react";
 
 interface IItem {
     id: string,
     text: string,
     link: string,
     icon: any
-};
+}
 
 const items: IItem[] = [
     { id: "home", text: "Home", link: "/", icon: faHome },
@@ -30,7 +30,7 @@ const items: IItem[] = [
 ];
 
 const Sidebar = ({openSidebar, setOpenSidebar}:any) => {
-    const theme = useSelector((state:any) => state.config.theme);
+    const theme = useAppSelector((state:any) => state.config.theme);
     const location = useLocation()
     const [activeItem, setActiveItem] = useState<string>(_.split(location.pathname, '/')[1]);
 

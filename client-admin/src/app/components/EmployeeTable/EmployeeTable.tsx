@@ -1,9 +1,9 @@
 import _ from "lodash";
-import { useSelector } from "react-redux";
-import { RootState } from "@app/store/store.ts";
+import { RootState } from "@app/store";
+import {useAppSelector} from "@app/store/hooks.ts";
 
 const EmployeeTable = ({employees, handleAddressClick}: any) => {
-    const theme = useSelector((state: RootState) => state.config.theme);
+    const theme = useAppSelector((state: RootState) => state.config.theme);
 
     return (
         <div className="overflow-x-auto custom-scrollbar mt-6 rounded-3xl text-left">

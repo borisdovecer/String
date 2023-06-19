@@ -5,7 +5,7 @@ import { DAppProvider } from "@usedapp/core";
 import { config } from "@app/config/chainConfig.ts";
 import './index.css'
 import { Provider } from "react-redux";
-import { store } from "@app/store/store.ts";
+import { store } from "@app/store";
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

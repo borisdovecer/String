@@ -1,13 +1,13 @@
+import { useEthers } from "@usedapp/core";
+import { useState } from "react";
 import { Header, Sidebar } from "@app/layout";
+import { useAppSelector } from "@app/store/hooks.ts";
 import AppRoutes from "@app/layout/Routes/AppRoutes.tsx";
-import {useEthers} from "@usedapp/core";
-import {useState} from "react";
-import {useSelector} from "react-redux";
 
 const Layout = () => {
-    const theme = useSelector((state:any) => state.config.theme);
-    const { account }:any = useEthers();
-    const [openSidebar, setOpenSidebar] = useState(true);
+    const theme = useAppSelector((state:any) => state.config.theme);
+    const { account } = useEthers();
+    const [openSidebar, setOpenSidebar] = useState(false);
 
     return (
         <div className='flex'>

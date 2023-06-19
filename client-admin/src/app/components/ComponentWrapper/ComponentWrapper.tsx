@@ -1,9 +1,9 @@
-import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faFilter, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
+import { useAppSelector } from "@app/store/hooks.ts";
 
 const ComponentWrapper = ({children, title, icon}: any) => {
-    const theme = useSelector((state:any) => state.config.theme);
+    const theme = useAppSelector((state:any) => state.config.theme);
 
     return (
         <div className={`${theme ? 'bg-dark-primary text-light-primary' : 'bg-light-tertiary text-dark-primary'} border-black border-2 pb-10 rounded-3xl`}>

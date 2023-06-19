@@ -1,15 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
-import { toggleTheme } from "@app/config/configReducer.ts";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faUser, faWallet } from '@fortawesome/free-solid-svg-icons';
+import { Link } from "react-router-dom";
 import { useEthers } from "@usedapp/core";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { contract } from "@app/config/chainConfig.ts";
+import { toggleTheme } from "@app/config/configReducer.ts";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useAppSelector, useAppDispatch } from "@app/store/hooks.ts";
+import { faSun, faMoon, faUser, faWallet } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
-    const theme = useSelector((state:any) => state.config.theme);
-    const dispatch = useDispatch();
+    const theme = useAppSelector((state) => state.config.theme);
+    const dispatch = useAppDispatch();
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLSpanElement>(null);
 

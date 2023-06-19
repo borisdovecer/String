@@ -1,15 +1,14 @@
 import _ from "lodash";
-import { useSelector } from "react-redux";
 import { useEffect, useState} from "react";
-import { RootState } from '@app/store/store.ts';
+import { useAppSelector } from '@app/store/hooks.ts';
 import { useContractFunction } from "@usedapp/core";
 import { ComponentWrapper, Table } from "@app/components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBuilding, faUsers } from "@fortawesome/free-solid-svg-icons";
 
 const Accounts = () => {
-    const contractInstance = useSelector((state: RootState) => state.contract.instance);
-    const theme = useSelector((state: RootState) => state.config.theme);
+    const contractInstance: any = useAppSelector((state) => state.contract.instance);
+    const theme: boolean = useAppSelector((state) => state.config.theme);
     const [employees, setEmployees] = useState<any>([])
     const [company, setCompany] = useState<any>([])
     const [address, setAddress] = useState<string>('');
