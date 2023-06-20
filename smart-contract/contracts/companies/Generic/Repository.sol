@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-import "./_StringModel.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "./Model.sol";
 
-abstract contract BaseContract is StringModel {
+contract Repository is Model {
 
-    uint16 public constant MAX_MINT_AMOUNT = 1000;
     Counters public counters;
 
     constructor(){
@@ -15,4 +13,9 @@ abstract contract BaseContract is StringModel {
         counters.employeeCount = 0;
         counters.tokenIdCount = 0;
     }
+
+   function addEmployee(address _employee, uint64 _companyId) external{
+        employees[_employee] = Employee(_employee, _companyId);
+        counters.employeeCount++;
+   }
 }
