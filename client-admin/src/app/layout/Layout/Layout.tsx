@@ -17,12 +17,12 @@ const Layout = () => {
                     <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
                 </div>
             }
-            <div className='w-full custom-scrollbar overflow-y-scroll'>
-                <div className='h-screen px-4 py-12'>
-                    <div className=''>
-                        <AppRoutes />
-                    </div>
-                    {/*<div className='w-screen absolute top-1/2 left-0 h-2 bg-dark-primary'>...</div>*/}
+            <div className='w-full relative custom-scrollbar overflow-y-scroll'>
+                <div className='w-full px-4 absolute z-20 my-12'>
+                    <AppRoutes />
+                </div>
+                <div className='h-screen absolute ml-2 z-10'>
+                    <div className={`${theme ? 'bg-dark-primary' : 'bg-light-primary'} w-screen  absolute top-1/2 -left-20 h-1.5`}>...</div>
                 </div>
             </div>
         </div>
