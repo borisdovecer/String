@@ -16,7 +16,7 @@ const Dashboard = () => {
     return (
         <div className='my-8 w-full'>
             <ComponentWrapper title='Dashboard' icon={faTachometerAlt}>
-                {data && <Table data={data} />}
+                {data && <Table data={data.slice(0,10)} />}
             </ComponentWrapper>
         </div>
     )

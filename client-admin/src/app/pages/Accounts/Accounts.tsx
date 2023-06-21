@@ -2,7 +2,7 @@ import _ from "lodash";
 import { useEffect, useState} from "react";
 import { useAppSelector } from '@app/store/hooks.ts';
 import { useContractFunction } from "@usedapp/core";
-import { ComponentWrapper, Table } from "@app/components";
+import {ComponentWrapper, EmployeeTable} from "@app/components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBuilding, faUsers } from "@fortawesome/free-solid-svg-icons";
 
@@ -37,6 +37,10 @@ const Accounts = () => {
         setRole(e.target.value);
     }
 
+    const handleAddressClick = (address:string) => {
+        setAddress(address)
+    }
+
     const accounts = _.map(employees, (item) => {
         const roles:any = {
             2: 'Transporter',
@@ -48,7 +52,7 @@ const Accounts = () => {
         return {
             wallet: item[0],
             company: company[0],
-            permissionLevel: role
+            role
         }
     })
     const filterZeroCompany = _.filter(accounts, (item: never) => item[1] !== 0)
@@ -60,7 +64,7 @@ const Accounts = () => {
                 <div className='flex flex-row space-x-4 text-black'>
                     <div className='w-3/4'>
                         <div className={`bg-light-secondary text-dark-primary rounded-3xl h-min-full`}>
-                            {!_.isEmpty(uniqueAddresses) && <Table data={uniqueAddresses}/>}
+                            {!_.isEmpty(uniqueAddresses) && <EmployeeTable employees={uniqueAddresses} handleAddressClick={handleAddressClick}/>}
                         </div>
                     </div>
                     <div className={`bg-light-primary text-dark-primary w-1/4  mt-6 rounded-3xl `}>

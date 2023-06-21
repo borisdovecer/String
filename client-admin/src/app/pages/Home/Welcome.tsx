@@ -1,55 +1,134 @@
 import { ComponentWrapper } from "@app/components";
-import { faHome, faUserCheck, faExchangeAlt, faCoins, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+    faHome,
+    faUserCheck,
+    faExchangeAlt,
+    faCoins,
+    faCheckCircle,
+    faHandHoldingUsd,
+    faLockOpen,
+    faStar,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "@app/store/hooks.ts";
+import { RootState } from "@app/store";
+import { useEffect, useState } from "react";
+import { useEthers } from "@usedapp/core";
 
 const Welcome = () => {
-    const theme = useAppSelector((state:any) => state.config.theme);
+    const theme = useAppSelector((state: RootState) => state.config.theme);
+    const contractInstance = useAppSelector((state) => state.contract.instance);
+    const { account } = useEthers();
+
+    const [nftBalance, setNftBalance] = useState<number>(0);
+
+    useEffect(() => {
+        contractInstance?.balanceOf(account).then((res:any) => {
+            setNftBalance(res.toNumber());
+        })
+    }, [contractInstance])
 
     return (
         <div className='my-8 w-full'>
-            <ComponentWrapper title='Home' icon={faHome}>
-                <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl p-8 text-left text-5xl h-[300px]`}>
-                    <h1 className='underline'>One platform</h1>
-                    <h1>for managing all <span className='underline'>your products</span>.</h1>
-                </div>
-                <div className='flex flex-row space-x-4 text-left'>
-                    <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
-                        <h1 className='text-2xl font-bold mb-12'>Welcome to admin panel</h1>
-                        <div className='flex justify-between space-x-4'>
-                            <Link to='/accounts'>
-                                <div className='text-center'>
-                                    <FontAwesomeIcon icon={faUserCheck} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                    <p className='mt-2'>Authorize</p>
-                                </div>
-                            </Link>
-                            <Link to='/transfer'>
-                                <div className='text-center'>
-                                    <FontAwesomeIcon icon={faExchangeAlt} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                    <p className='mt-2'>Transfer</p>
-                                </div>
-                            </Link>
-                            <Link to='/products'>
-                                <div className='text-center'>
-                                    <FontAwesomeIcon icon={faCoins} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                    <p className='mt-2'>Mint</p>
-                                </div>
-                            </Link>
-                            <Link to='/dashboard'>
-                                <div className='text-center'>
-                                    <FontAwesomeIcon icon={faCheckCircle} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                    <p className='mt-2'>Validate</p>
-                                </div>
-                            </Link>
+            <div>
+                <ComponentWrapper title='Home' icon={faHome}>
+                    <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl p-8 text-left text-5xl h-[300px]`}>
+                        <h1 className='underline'>One platform</h1>
+                        <h1>for managing all <span className='underline'>your products</span>.</h1>
+                    </div>
+                    <div className='flex flex-row space-x-4 text-left'>
+                        <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
+                            <h1 className='text-2xl font-bold mb-12'>Welcome to admin panel</h1>
+                            <div className='flex justify-between space-x-4'>
+                                <Link to='/accounts'>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon icon={faUserCheck} className="text-5xl p-2 border-2 border-black rounded-xl" />
+                                        <p className='mt-2'>Authorize</p>
+                                    </div>
+                                </Link>
+                                <Link to='/transfer'>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon icon={faExchangeAlt} className="text-5xl p-2 border-2 border-black rounded-xl" />
+                                        <p className='mt-2'>Transfer</p>
+                                    </div>
+                                </Link>
+                                <Link to='/products'>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon icon={faCoins} className="text-5xl p-2 border-2 border-black rounded-xl" />
+                                        <p className='mt-2'>Mint</p>
+                                    </div>
+                                </Link>
+                                <Link to='/dashboard'>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon icon={faCheckCircle} className="text-5xl p-2 border-2 border-black rounded-xl" />
+                                        <p className='mt-2'>Validate</p>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-1/3 p-8 text-xl`}>
+                            <div className='flex flex-row justify-between mb-4'>
+                                <h1 className='text-2xl font-bold'>NFT Balance: </h1>
+                                <p className='text-xl font-bold'>{nftBalance} strnft</p>
+                            </div>
+                            <div className='flex flex-row justify-between'>
+                                <h1 className='text-2xl font-bold'>Products created:</h1>
+                                <p className='text-xl font-bold'>4</p>
+                            </div>
                         </div>
                     </div>
-                    <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-1/3 p-8 text-xl`}>
-                        <h1 className='text-2xl font-bold mb-4'>TBD</h1>
-                        <p className='text-xl font-bold'>one ring to rule them all</p>
+                </ComponentWrapper>
+            </div>
+            <div className='my-16'>
+                <ComponentWrapper title='string coin' icon={faCoins}>
+                    <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl p-8 text-left text-5xl h-[300px]`}>
+                        <h1 className=''>Stake string coin</h1>
+                        <h1>and unlock <span className='underline'>premium features</span>.</h1>
                     </div>
-                </div>
-            </ComponentWrapper>
+                    <div className='flex flex-row space-x-4 text-left'>
+                        <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
+                            <h1 className='text-2xl font-bold mb-12'>What would you do?</h1>
+                            <div className='flex justify-between space-x-4'>
+                                <Link to='/accounts'>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon icon={faExchangeAlt} className="text-5xl p-2 border-2 border-black rounded-xl" />
+                                        <p className='mt-2'>Swap</p>
+                                    </div>
+                                </Link>
+                                <Link to='/transfer'>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon icon={faHandHoldingUsd} className="text-5xl p-2 border-2 border-black rounded-xl" />
+                                        <p className='mt-2'>Stake</p>
+                                    </div>
+                                </Link>
+                                <Link to='/products'>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon icon={faLockOpen} className="text-5xl p-2 border-2 border-black rounded-xl" />
+                                        <p className='mt-2'>Unlock</p>
+                                    </div>
+                                </Link>
+                                <Link to='/dashboard'>
+                                    <div className='text-center'>
+                                        <FontAwesomeIcon icon={faStar} className="text-5xl p-2 border-2 border-black rounded-xl" />
+                                        <p className='mt-2'>Premium</p>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-1/3 p-8 text-xl`}>
+                            <div className='flex flex-row justify-between mb-4'>
+                                <h1 className='text-2xl font-bold'>Current Balance:</h1>
+                                <p className='text-xl font-bold'>420,000 strc</p>
+                            </div>
+                            <div className='flex flex-row justify-between mb-4'>
+                                <h1 className='text-2xl font-bold'>Staked Balance:</h1>
+                                <p className='text-xl font-bold'>653,210 strc</p>
+                            </div>
+                        </div>
+                    </div>
+                </ComponentWrapper>
+            </div>
         </div>
     )
 }

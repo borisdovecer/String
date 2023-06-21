@@ -3,7 +3,9 @@ const { ethers } = hre;
 
 async function main() {
   // Get the Contract Factory
-  const StringNFT = await ethers.getContractFactory('StringNFT')
+  const Proxy = await ethers.getContractFactory('Proxy');
+    const Registry = await ethers.getContractFactory('Registry');
+    const CompanyFactory = await ethers.getContractFactory('CompanyFactory');
 
   // Signers represent Ethereum accounts
   // When running hardhat locally, the accounts will be local and unlocked
@@ -13,10 +15,20 @@ async function main() {
   console.log('Deploying the contract with the account:', deployer.address)
 
   // We get the contract to deploy
-  const contract = await StringNFT.deploy()
-  await contract.deployed()
+  const proxy = await Proxy.deploy()
+  await proxy.deployed()
 
-  console.log('Contract deployed to:', contract.address)
+  console.log('Proxy contract deployed to:', proxy.address)
+
+    const registry = await Registry.deploy()
+    await registry.deployed()
+
+    console.log('Registry contract deployed to:', registry.address)
+
+    const companyFactory = await CompanyFactory.deploy()
+    await companyFactory.deployed()
+
+    console.log('CompanyFactory contract deployed to:', companyFactory.address)
 }
 
 main()
