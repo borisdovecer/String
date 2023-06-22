@@ -13,21 +13,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "@app/store/hooks.ts";
 import { RootState } from "@app/store";
-import { useEffect, useState } from "react";
-import { useEthers } from "@usedapp/core";
+import { useEthers, useTokenBalance, useToken, Falsy, Web3Ethers } from "@usedapp/core";
+import { contract } from "@app/config/chainConfig.ts";
+import { TokenInfo } from "@usedapp/core/dist/cjs/src/model/TokenInfo";
+
 
 const Welcome = () => {
-    const theme = useAppSelector((state: RootState) => state.config.theme);
-    const contractInstance = useAppSelector((state) => state.contract.instance);
-    const { account } = useEthers();
+    const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
+    const { account }: Web3Ethers = useEthers();
+    const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
 
-    const [nftBalance, setNftBalance] = useState<number>(0);
-
-    useEffect(() => {
-        contractInstance?.balanceOf(account).then((res:any) => {
-            setNftBalance(res.toNumber());
-        })
-    }, [contractInstance])
+    const nftBalance: string | Falsy = useTokenBalance(contract.address, account, {})?.toString();
+    const tokenNumber: string | Falsy = useTokenBalance(contract.coin, account, {})?.toString();
+    const stakedTokens: string | Falsy = useTokenBalance(contract.stake, account, {})?.toString();
 
     return (
         <div className='my-8 w-full'>
@@ -36,6 +34,7 @@ const Welcome = () => {
                     <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl p-8 text-left text-5xl h-[300px]`}>
                         <h1 className='underline'>One platform</h1>
                         <h1>for managing all <span className='underline'>your products</span>.</h1>
+                        <p className='text-lg pt-8'>ERC721 address: {contract.address}</p>
                     </div>
                     <div className='flex flex-row space-x-4 text-left'>
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
@@ -85,6 +84,7 @@ const Welcome = () => {
                     <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl p-8 text-left text-5xl h-[300px]`}>
                         <h1 className=''>Stake string coin</h1>
                         <h1>and unlock <span className='underline'>premium features</span>.</h1>
+                        <p className='text-lg pt-8'>ERC20 address: {contract.address}</p>
                     </div>
                     <div className='flex flex-row space-x-4 text-left'>
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
@@ -119,11 +119,11 @@ const Welcome = () => {
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-1/3 p-8 text-xl`}>
                             <div className='flex flex-row justify-between mb-4'>
                                 <h1 className='text-2xl font-bold'>Current Balance:</h1>
-                                <p className='text-xl font-bold'>420,000 strc</p>
+                                <p className='text-xl font-bold'>{tokenNumber} {stringToken?.symbol}</p>
                             </div>
                             <div className='flex flex-row justify-between mb-4'>
                                 <h1 className='text-2xl font-bold'>Staked Balance:</h1>
-                                <p className='text-xl font-bold'>653,210 strc</p>
+                                <p className='text-xl font-bold'>{stakedTokens} {stringToken?.symbol}</p>
                             </div>
                         </div>
                     </div>

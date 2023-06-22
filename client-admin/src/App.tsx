@@ -1,24 +1,32 @@
-import { useEffect } from "react";
 import { Contract } from "ethers";
 import { Layout } from "@app/layout";
-import { useDispatch } from "react-redux";
-import { useEthers } from "@usedapp/core";
-import StringNFT from "@app/abi/StringNFT.json";
+import { RootState } from "@app/store";
+import { Action } from "@reduxjs/toolkit";
+import { Dispatch, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
-import { useAppSelector } from "@app/store/hooks.ts";
+import StringNFT from "@app/abi/StringNFT.json";
+import StringCoin from "@app/abi/StringCoin.json";
+import StringStake from "@app/abi/StringStake.json";
+import { useEthers, Web3Ethers} from "@usedapp/core";
+import { useAppDispatch, useAppSelector } from "@app/store/hooks.ts";
 import { contract } from "@app/config/chainConfig.ts";
-import { createContract } from "@app/config/ContractSlice.ts";
+import { createContract, createCoin, createStake} from "@app/config/ContractSlice.ts";
 
 const App = () =>  {
-    const theme = useAppSelector((state:any) => state.config.theme);
-    const { account, library }:any = useEthers();
+    const theme: boolean = useAppSelector((state:RootState) => state.config.theme);
+    const { account, library }: Web3Ethers | any = useEthers();
 
-    const dispatch = useDispatch();
+    const dispatch:Dispatch<Action> = useAppDispatch();
 
     useEffect(() => {
         if(account && library){
-            const contractInstance = new Contract(contract.address, StringNFT.abi, library.getSigner());
+            const contractInstance: Contract = new Contract(contract.address, StringNFT.abi, library.getSigner());
+            const stringInstance: Contract = new Contract(contract.coin, StringCoin.abi, library.getSigner());
+            const stakeInstance: Contract = new Contract(contract.stake, StringStake.abi, library.getSigner());
+
             dispatch(createContract(contractInstance));
+            dispatch(createCoin(stringInstance));
+            dispatch(createStake(stakeInstance));
         }
     }, [account, library, dispatch]);
 
