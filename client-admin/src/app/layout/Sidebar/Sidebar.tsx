@@ -1,38 +1,28 @@
 import _ from "lodash";
-import {useEffect, useState} from "react";
-import {
-    faHome,
-    faTachometerAlt,
-    faBoxOpen,
-    faCog,
-    faArrowAltCircleRight,
-    faBars,
-    faUsers
-} from "@fortawesome/free-solid-svg-icons";
-import { Link, useLocation } from "react-router-dom";
+import { BigNumberish } from "ethers";
+import { items, IItem } from './Items.tsx';
+import { contract } from "@app/config/chainConfig.ts";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { Link, useLocation, Location } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {Dispatch, FC, Fragment, JSX, SetStateAction, useEffect, useState} from "react";
+import { Falsy, useEthers, useTokenBalance, Web3Ethers } from "@usedapp/core";
 
-interface IItem {
-    id: string,
-    text: string,
-    link: string,
-    icon: any
+interface IProps {
+    openSidebar: boolean,
+    setOpenSidebar: Dispatch<SetStateAction<boolean>>
 }
 
-const items: IItem[] = [
-    { id: "home", text: "Home", link: "/", icon: faHome },
-    { id: "accounts", text: "Accounts", link: "/accounts", icon: faUsers },
-    { id: "dashboard", text: "Dashboard", link: "/dashboard", icon: faTachometerAlt },
-    { id: "products", text: "Products", link: "/products", icon: faBoxOpen },
-    { id: "transfer", text: "Transfer", link: "/transfer", icon: faArrowAltCircleRight },
-    { id: "settings", text: "Settings", link: "/settings", icon: faCog },
-];
-
-const Sidebar = ({openSidebar, setOpenSidebar}:any) => {
-    const location = useLocation()
+const Sidebar: FC<IProps> = ({openSidebar, setOpenSidebar}:IProps): JSX.Element => {
+    const location: Location = useLocation()
     const [activeItem, setActiveItem] = useState<string>(_.split(location.pathname, '/')[1]);
-    const [delayedText, setDelayedText] = useState(false)
-    const handleItemClick = (itemId: string) => {
+    const [delayedText, setDelayedText] = useState(false);
+    const { account }: Web3Ethers = useEthers();
+
+    const stakedTokens: BigNumberish | Falsy = useTokenBalance(contract.stake, account, {});
+    const stakeToNumber: number = stakedTokens?.toNumber() || 0
+
+    const handleItemClick = (itemId: string): void => {
         setActiveItem(itemId);
     };
 
@@ -50,21 +40,25 @@ const Sidebar = ({openSidebar, setOpenSidebar}:any) => {
             </div>
             <ul className='space-y-6 pt-6 text-left'>
                 {_.map(items, (item: IItem, index: number) => (
-                    <li key={index} onClick={() => handleItemClick(item.id)}>
-                        <Link to={item.link}  className={`text-xl text-light-primary pl-2 hover:border-l-2 ${activeItem === item.id ? 'border-l-2 font-extrabold' : ''}`}>
-                            <FontAwesomeIcon icon={item.icon} className="mr-4" />
-                            {delayedText &&
-                                <span className='transition-opacity duration-500 ease-in-out'>
+                    <Fragment key={item.id}>
+                        {(item.requiredBalance <= stakeToNumber) &&
+                            <li key={index} onClick={() => handleItemClick(item.id)}>
+                                <Link to={item.link}
+                                      className={`text-xl text-light-primary pl-2 hover:border-l-2 ${activeItem === item.id ? 'border-l-2 font-extrabold' : ''}`}>
+                                    <FontAwesomeIcon icon={item.icon} className="mr-4"/>
+                                    {delayedText &&
+                                        <span className='transition-opacity duration-500 ease-in-out'>
                                   {openSidebar && item.text}
                                 </span>
-                            }
-                        </Link>
-                    </li>
+                                    }
+                                </Link>
+                            </li>
+                        }
+                    </Fragment>
                 ))}
             </ul>
         </div>
     )
 }
-
 
 export default Sidebar;

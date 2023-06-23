@@ -1,4 +1,9 @@
-const initialState = {
+interface IState {
+    theme: boolean;
+    provedAccessBirthday: boolean;
+}
+
+const initialState: IState = {
     theme: true,
     provedAccessBirthday: false
 }

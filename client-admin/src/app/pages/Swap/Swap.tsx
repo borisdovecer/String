@@ -2,19 +2,43 @@ import { ComponentWrapper } from "@app/components";
 import { faExchangeAlt, faHandHoldingUsd} from "@fortawesome/free-solid-svg-icons";
 // import _ from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {Contract, ContractReceipt} from "ethers";
+import { BigNumberish, Contract, ContractReceipt} from "ethers";
 import {useAppSelector} from "@app/store/hooks.ts";
 import {RootState} from "@app/store";
-import {useContractFunction} from "@usedapp/core";
+import {Falsy, useContractFunction, useEthers, useToken, useTokenBalance, useEtherBalance, Web3Ethers} from "@usedapp/core";
 import {useState} from "react";
+import {TokenInfo} from "@usedapp/core/dist/cjs/src/model/TokenInfo";
+import {contract} from "@app/config/chainConfig.ts";
+import { formatEther } from '@ethersproject/units'
+
 
 const Swap = () => {
     const stakeInstance: Contract | null = useAppSelector((state: RootState) => state.contract.stake);
-    const [stakeAmount, setStakeAmount] = useState<number | null>();
-    const { send } = useContractFunction(stakeInstance, 'stake', {});
+    const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
+    const { account }: Web3Ethers = useEthers();
+    const ethBalance: BigNumberish | Falsy = useEtherBalance(account)
+
+    const tokenNumber: BigNumberish | Falsy = useTokenBalance(contract.coin, account, {});
+    const stakedTokens: BigNumberish | Falsy = useTokenBalance(contract.stake, account, {});
+
+    const [stakeAmount, setStakeAmount] = useState<number>(0);
+    const [unlockAmount, setUnlockAmount] = useState<number | null>();
+
+    const stake = useContractFunction(stakeInstance, 'stake', {});
+    const withdraw = useContractFunction(stakeInstance, 'withdraw', {});
 
     const handleStake = () => {
-        send(stakeAmount).then((res: ContractReceipt | undefined) => console.log(res));
+        const { send } = stake;
+        const amount:BigNumberish = stakeAmount * 10**18
+        if (amount > 0) {
+            send(stakeAmount).then((res: ContractReceipt | undefined) => console.log(res));
+        }
+
+    }
+
+    const handleUnlock = () => {
+        const { send } = withdraw
+        send(unlockAmount).then((res: ContractReceipt | undefined) => console.log(res));
     }
 
     return (
@@ -56,8 +80,8 @@ const Swap = () => {
                                     </div>
                                     <div className='mb-4'>
                                         <p className="">Unlock your SRTC</p>
-                                        <input type='number' className='p-2 border border-dark-quaternary rounded-3xl' /> sSTRC
-                                        <button className='w-48 p-4 ml-6 bg-orange-400 rounded-3xl ' onClick={() => console.log('swap')}>Unlock!</button>
+                                        <input type='number' className='p-2 border border-dark-quaternary rounded-3xl' onChange={(e:any) => setUnlockAmount(e.target.value)} /> sSTRC
+                                        <button className='w-48 p-4 ml-6 bg-orange-400 rounded-3xl ' onClick={handleUnlock}>Unlock!</button>
                                     </div>
                                 </div>
                             </div>
@@ -69,13 +93,25 @@ const Swap = () => {
                                 <h2 className="text-xl font-semibold"><FontAwesomeIcon icon={faExchangeAlt} className="mx-2" />Balance</h2>
                             </div>
                             <div className="mt-4">
-                                <div className="justify-between px-4 py-1 font-bold text-lg">
+                                <div className="px-4 py-1 font-bold text-lg space-y-4">
                                     <p className="">Your current balance:</p>
-                                    <p>1,312.666 STRC</p>
-                                    <p>0.00 sSTRC</p>
-                                    <p>1.2333 ETH</p>
+                                    <div className='flex flex-row justify-between'>
+                                        <p>{stringToken?.symbol}</p>
+                                        <p>{tokenNumber && formatEther(tokenNumber)}</p>
+                                    </div>
+                                    <div className='flex flex-row justify-between'>
+                                        <p>s{stringToken?.symbol}</p>
+                                        <p>{stakedTokens && formatEther(stakedTokens)}</p>
+                                    </div>
+                                    <div className='flex flex-row justify-between'>
+                                        <p>ETH</p>
+                                        <p>{ethBalance && formatEther(ethBalance)}</p>
+                                    </div>
+                                    <div className='flex flex-row justify-between'>
+                                        <p>Reward</p>
+                                        <p>0</p>
+                                    </div>
 
-                                    <p>rewards: 234.423 STRC</p>
                                 </div>
                             </div>
                         </div>

@@ -1,9 +1,12 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
 import rootReducers from './store';
 
 export const store = configureStore({
-    reducer: rootReducers, // Set the root reducers object as the main reducer for the store
-    devTools: true, // Enable Redux DevTools for easier state debugging and monitoring
+    reducer: rootReducers,
+    middleware: getDefaultMiddleware({
+        serializableCheck: false,
+    }),
+    devTools: true,
 });
 
 export type AppDispatch = typeof store.dispatch;

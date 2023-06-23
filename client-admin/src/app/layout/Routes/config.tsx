@@ -3,7 +3,6 @@ import {
     ErrorPage,
     Home,
     Swap,
-    Stake,
     Support,
     Transfer,
     ProductDetails,
@@ -21,8 +20,7 @@ export interface IRoutes {
 
 export const routeConfig: IRoutes[] = [
     { id: 'home', path:'/', element: <Home /> },
-    { id: 'swap', path:'/Swap', element: <Swap /> },
-    { id: 'stake', path:'/Stake', element: <Stake /> },
+    { id: 'token', path:'/token', element: <Swap /> },
     { id: 'dashboard', path:'/dashboard', element: <Dashboard /> },
     { id: 'transfer', path:'/transfer', element: <Transfer /> },
     { id: 'details', path:'/products/:id', element: <ProductDetails /> },
@@ -34,6 +32,7 @@ export const routeConfig: IRoutes[] = [
 
 export const routeBasic: IRoutes[] = [
     { id: 'home', path:'/', element: <Home /> },
+    { id: 'swap', path:'/Swap', element: <Swap /> },
     { id: 'register', path:'/register', element: <Register /> },
     { id: 'support', path:'/support', element: <Support /> },
     { id: 'error', path:'*', element: <ErrorPage /> }
