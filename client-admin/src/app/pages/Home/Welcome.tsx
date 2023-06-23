@@ -90,25 +90,25 @@ const Welcome = () => {
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
                             <h1 className='text-2xl font-bold mb-12'>What would you do?</h1>
                             <div className='flex justify-between space-x-4'>
-                                <Link to='/accounts'>
+                                <Link to='/swap'>
                                     <div className='text-center'>
                                         <FontAwesomeIcon icon={faExchangeAlt} className="text-5xl p-2 border-2 border-black rounded-xl" />
                                         <p className='mt-2'>Swap</p>
                                     </div>
                                 </Link>
-                                <Link to='/transfer'>
+                                <Link to='/stake'>
                                     <div className='text-center'>
                                         <FontAwesomeIcon icon={faHandHoldingUsd} className="text-5xl p-2 border-2 border-black rounded-xl" />
                                         <p className='mt-2'>Stake</p>
                                     </div>
                                 </Link>
-                                <Link to='/products'>
+                                <Link to='/'>
                                     <div className='text-center'>
                                         <FontAwesomeIcon icon={faLockOpen} className="text-5xl p-2 border-2 border-black rounded-xl" />
                                         <p className='mt-2'>Unlock</p>
                                     </div>
                                 </Link>
-                                <Link to='/dashboard'>
+                                <Link to='/settings'>
                                     <div className='text-center'>
                                         <FontAwesomeIcon icon={faStar} className="text-5xl p-2 border-2 border-black rounded-xl" />
                                         <p className='mt-2'>Premium</p>

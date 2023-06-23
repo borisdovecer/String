@@ -1,4 +1,6 @@
 export { Home } from './Home';
+export { Swap } from './Swap';
+export { Stake } from './Stake';
 export { Support } from './Support';
 export { Settings } from './Settings';
 export { Accounts } from './Accounts';

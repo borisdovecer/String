@@ -1,38 +1,40 @@
 import { ComponentWrapper } from "@app/components";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
-import { useContractFunction } from "@usedapp/core";
+import { faExchangeAlt, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { Falsy, useContractFunction, useToken } from "@usedapp/core";
 import { useAppSelector } from "@app/store/hooks.ts";
+import { RootState } from "@app/store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { TokenInfo } from "@usedapp/core/dist/cjs/src/model/TokenInfo";
+import { contract } from "@app/config/chainConfig.ts";
+import { Contract, ContractReceipt } from "ethers";
 
 const Settings = () => {
-    const contractInstance = useAppSelector((state) => state.contract.instance);
-    const [companyName, setCompanyName] = useState<string>('');
+    const contractInstance: Contract | null = useAppSelector((state: RootState) => state.contract.coin);
+    const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
 
-    const { send } = useContractFunction(contractInstance, 'addCompany', {});
+    const { send } = useContractFunction(contractInstance, 'approve', {});
 
-    useEffect(() => {
-        if (contractInstance) {
-            contractInstance.getAllCompanies().then((res:string) => console.log(res))
-        }
-    }, [contractInstance])
-
-    const handleChange = (e:any) => {
-        setCompanyName(e.target.value);
-    }
-
-    const handleClick = async () => {
-        send(companyName).then((res) => console.log(res));
+    const handleClick = async (): Promise<void> => {
+        send(contract.stake, stringToken?.totalSupply).then((res: ContractReceipt | undefined) => console.log(res));
     };
 
     return (
         <div className='my-8 w-full'>
             <ComponentWrapper title='Settings' icon={faUsers}>
-                <div>
-                    <div>
-                        <label>Add Name of the Company **Only Owner** </label>
-                        <input className='text-black' name='name' type='text' onChange={handleChange} />
+                <div className={`bg-light-primary text-dark-primary w-1/3  mt-6 rounded-3xl `}>
+                    <div className="rounded-3xl">
+                        <div className={`bg-light-secondary text-dark-primary rounded-3xl px-2 py-2`}>
+                            <h2 className="text-xl font-semibold"><FontAwesomeIcon icon={faExchangeAlt} className="mx-2" />Settings</h2>
+                        </div>
+                        <div className="mt-4">
+                            <div className="justify-between px-4 py-1 font-bold text-lg">
+                                <div className='mb-4'>
+                                    <p className="">Approve **Only Owner**</p>
+                                    <button className='w-48 p-4 ml-6 bg-orange-400 rounded-3xl ' onClick={handleClick}>Apporve!</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <button onClick={handleClick}>Create</button>
                 </div>
             </ComponentWrapper>
         </div>
