@@ -16,25 +16,26 @@ import { JSX } from "react";
 export interface IRoutes {
     id: string,
     path: string,
-    element: JSX.Element
+    element: JSX.Element,
+    requiredBalance: number
 }
 
 export const routeConfig: IRoutes[] = [
-    { id: 'home', path:'/', element: <Home /> },
-    { id: 'token', path:'/token', element: <Swap /> },
-    { id: 'dashboard', path:'/dashboard', element: <Dashboard /> },
-    { id: 'transfer', path:'/transfer', element: <Transfer /> },
-    { id: 'details', path:'/products/:id', element: <ProductDetails /> },
-    { id: 'settings', path:'/settings', element: <Settings /> },
-    { id: 'products', path:'/products', element: <ProductList /> },
-    { id: 'accounts', path:'/accounts', element: <Accounts /> },
-    { id: 'error', path:'*', element: <ErrorPage /> }
+    { id: 'home', path:'/', element: <Home />, requiredBalance: 0 },
+    { id: 'token', path:'/token', element: <Swap />, requiredBalance: 0 },
+    { id: 'dashboard', path:'/dashboard', element: <Dashboard />, requiredBalance: 100 },
+    { id: 'transfer', path:'/transfer', element: <Transfer />, requiredBalance: 1000 },
+    { id: 'details', path:'/products/:id', element: <ProductDetails />, requiredBalance: 2000 },
+    { id: 'settings', path:'/settings', element: <Settings />, requiredBalance: 0 },
+    { id: 'products', path:'/products', element: <ProductList />, requiredBalance: 2000 },
+    { id: 'accounts', path:'/accounts', element: <Accounts />, requiredBalance: 1000 },
+    { id: 'error', path:'*', element: <ErrorPage />, requiredBalance: 0 }
 ];
 
 export const routeBasic: IRoutes[] = [
-    { id: 'home', path:'/', element: <Home /> },
-    { id: 'swap', path:'/Swap', element: <Swap /> },
-    { id: 'register', path:'/register', element: <Register /> },
-    { id: 'support', path:'/support', element: <Support /> },
-    { id: 'error', path:'*', element: <ErrorPage /> }
+    { id: 'home', path:'/', element: <Home />, requiredBalance: 0 },
+    { id: 'swap', path:'/Swap', element: <Swap />, requiredBalance: 0 },
+    { id: 'register', path:'/register', element: <Register />, requiredBalance: 0 },
+    { id: 'support', path:'/support', element: <Support />, requiredBalance: 0 },
+    { id: 'error', path:'*', element: <ErrorPage />, requiredBalance: 0 }
 ];

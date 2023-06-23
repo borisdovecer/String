@@ -1,20 +1,15 @@
-import {
-    faHome,
-    faUserCheck,
-    faExchangeAlt,
-    faCoins,
-    faCheckCircle,
-    faHandHoldingUsd,
-    faLockOpen,
-    faStar,
-} from "@fortawesome/free-solid-svg-icons";
-import { FC, JSX } from "react";
+import _ from "lodash";
+import { BigNumberish } from "ethers";
 import { RootState } from "@app/store";
 import { Link } from "react-router-dom";
+import { FC, Fragment, JSX } from "react";
 import { ComponentWrapper } from "@app/components";
 import { useAppSelector } from "@app/store/hooks.ts";
+import { IItem } from "@app/layout/Sidebar/Items.tsx";
 import { contract } from "@app/config/chainConfig.ts";
+import { topLevelFields, bottomLevelFields } from './';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faCoins } from "@fortawesome/free-solid-svg-icons";
 import { TokenInfo } from "@usedapp/core/dist/cjs/src/model/TokenInfo";
 import { useEthers, useTokenBalance, useToken, Falsy, Web3Ethers } from "@usedapp/core";
 
@@ -22,10 +17,10 @@ const Welcome: FC = (): JSX.Element => {
     const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
     const { account }: Web3Ethers = useEthers();
     const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
-
     const nftBalance: string | Falsy = useTokenBalance(contract.address, account, {})?.toString();
     const tokenNumber: string | Falsy = useTokenBalance(contract.coin, account, {})?.toString();
-    const stakedTokens: string | Falsy = useTokenBalance(contract.stake, account, {})?.toString();
+    const stakedTokens: BigNumberish | Falsy = useTokenBalance(contract.stake, account, {});
+    const stakeToNumber: number = stakedTokens?.toNumber() || 0;
 
     return (
         <div className='my-8 w-full'>
@@ -40,36 +35,27 @@ const Welcome: FC = (): JSX.Element => {
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
                             <h1 className='text-2xl font-bold mb-12'>Welcome to admin panel</h1>
                             <div className='flex justify-between space-x-4'>
-                                <Link to='/accounts'>
-                                    <div className='text-center'>
-                                        <FontAwesomeIcon icon={faUserCheck} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                        <p className='mt-2'>Authorize</p>
-                                    </div>
-                                </Link>
-                                <Link to='/transfer'>
-                                    <div className='text-center'>
-                                        <FontAwesomeIcon icon={faExchangeAlt} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                        <p className='mt-2'>Transfer</p>
-                                    </div>
-                                </Link>
-                                <Link to='/products'>
-                                    <div className='text-center'>
-                                        <FontAwesomeIcon icon={faCoins} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                        <p className='mt-2'>Mint</p>
-                                    </div>
-                                </Link>
-                                <Link to='/dashboard'>
-                                    <div className='text-center'>
-                                        <FontAwesomeIcon icon={faCheckCircle} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                        <p className='mt-2'>Validate</p>
-                                    </div>
-                                </Link>
+                                {_.map(topLevelFields, (item: IItem) => (
+                                    <Fragment key={item.id}>
+                                        {item.requiredBalance <= stakeToNumber &&
+                                            <Link to={item.link}>
+                                                <div className='text-center'>
+                                                    <FontAwesomeIcon icon={item.icon} className="text-5xl p-2 border-2 border-black rounded-xl"/>
+                                                    <p className='mt-2'>{item.text}</p>
+                                                </div>
+                                            </Link>
+                                        }
+                                    </Fragment>
+                                ))}
+                                {stakeToNumber <= 100 &&
+                                    <div>You will have to stake 2000 STRC to use application <Link to='/token' className='text-green-500 text-2xl font-bold'>Swap/Stake</Link></div>
+                                }
                             </div>
                         </div>
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-1/3 p-8 text-xl`}>
                             <div className='flex flex-row justify-between mb-4'>
                                 <h1 className='text-2xl font-bold'>NFT Balance: </h1>
-                                <p className='text-xl font-bold'>{nftBalance} strnft</p>
+                                <p className='text-xl font-bold'>{nftBalance} STRNFT</p>
                             </div>
                             <div className='flex flex-row justify-between'>
                                 <h1 className='text-2xl font-bold'>Products created:</h1>
@@ -90,30 +76,18 @@ const Welcome: FC = (): JSX.Element => {
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
                             <h1 className='text-2xl font-bold mb-12'>What would you do?</h1>
                             <div className='flex justify-between space-x-4'>
-                                <Link to='/swap'>
-                                    <div className='text-center'>
-                                        <FontAwesomeIcon icon={faExchangeAlt} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                        <p className='mt-2'>Swap</p>
-                                    </div>
-                                </Link>
-                                <Link to='/stake'>
-                                    <div className='text-center'>
-                                        <FontAwesomeIcon icon={faHandHoldingUsd} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                        <p className='mt-2'>Stake</p>
-                                    </div>
-                                </Link>
-                                <Link to='/'>
-                                    <div className='text-center'>
-                                        <FontAwesomeIcon icon={faLockOpen} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                        <p className='mt-2'>Unlock</p>
-                                    </div>
-                                </Link>
-                                <Link to='/settings'>
-                                    <div className='text-center'>
-                                        <FontAwesomeIcon icon={faStar} className="text-5xl p-2 border-2 border-black rounded-xl" />
-                                        <p className='mt-2'>Premium</p>
-                                    </div>
-                                </Link>
+                                {_.map(bottomLevelFields, (item: IItem) => (
+                                    <Fragment key={item.id}>
+                                        {item.requiredBalance <= stakeToNumber &&
+                                            <Link to={item.link}>
+                                                <div className='text-center'>
+                                                    <FontAwesomeIcon icon={item.icon} className="text-5xl p-2 border-2 border-black rounded-xl"/>
+                                                    <p className='mt-2'>{item.text}</p>
+                                                </div>
+                                            </Link>
+                                        }
+                                    </Fragment>
+                                ))}
                             </div>
                         </div>
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-1/3 p-8 text-xl`}>
@@ -123,7 +97,7 @@ const Welcome: FC = (): JSX.Element => {
                             </div>
                             <div className='flex flex-row justify-between mb-4'>
                                 <h1 className='text-2xl font-bold'>Staked Balance:</h1>
-                                <p className='text-xl font-bold'>{stakedTokens} {stringToken?.symbol}</p>
+                                <p className='text-xl font-bold'>{stakeToNumber} {stringToken?.symbol}</p>
                             </div>
                         </div>
                     </div>

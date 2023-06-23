@@ -37,7 +37,7 @@ const Sidebar: FC<IProps> = ({openSidebar, setOpenSidebar}:IProps): JSX.Element 
             <ul className='space-y-6 pt-6 text-left'>
                 {_.map(items, (item: IItem, index: number) => (
                     <Fragment key={item.id}>
-                        {(item.requiredBalance <= stakeToNumber) &&
+                        {item.requiredBalance <= stakeToNumber &&
                             <li key={index} onClick={() => handleItemClick(item.id)}>
                                 <Link to={item.link}
                                       className={`text-xl text-light-primary pl-2 hover:border-l-2 ${activeItem === item.id ? 'border-l-2 font-extrabold' : ''}`}>
