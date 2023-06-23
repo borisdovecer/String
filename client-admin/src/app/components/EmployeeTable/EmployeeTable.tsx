@@ -1,6 +1,9 @@
 import _ from "lodash";
+import { FC, JSX } from "react";
+import { IEmployee } from "@app/pages/Transfer";
+import { IProps } from './';
 
-const EmployeeTable = ({employees, handleAddressClick}: any) => {
+const EmployeeTable: FC<IProps> = ({employees, handleAddressClick}: IProps): JSX.Element => {
     console.log(employees)
     return (
         <div className="overflow-x-auto custom-scrollbar mt-6 rounded-3xl text-left">
@@ -12,7 +15,7 @@ const EmployeeTable = ({employees, handleAddressClick}: any) => {
                 </tr>
                 </thead>
                 <tbody className='overflow-y-auto'>
-                {_.map(employees, (employee:any) => (
+                {_.map(employees, (employee:IEmployee) => (
                     <tr key={employee.wallet} className={`bg-light-primary text-dark-secondary py-2`}>
                         <td onClick={() => handleAddressClick(employee.wallet)} className='cursor-pointer px-8 py-2'>{employee.wallet}</td>
                         <td>{employee.role}</td>

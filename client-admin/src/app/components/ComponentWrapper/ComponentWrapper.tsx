@@ -1,9 +1,12 @@
+import { IProps } from './';
+import { FC, JSX } from "react";
+import { RootState } from "@app/store";
+import { useAppSelector } from "@app/store/hooks.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faFilter, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
-import { useAppSelector } from "@app/store/hooks.ts";
 
-const ComponentWrapper = ({children, title, icon}: any) => {
-    const theme = useAppSelector((state:any) => state.config.theme);
+const ComponentWrapper: FC<IProps> = ({ children, title, icon }: IProps): JSX.Element => {
+    const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
 
     return (
         <div className={`${theme ? 'bg-dark-primary text-light-primary shadow-dark-tertiary shadow-xl' : 'bg-light-quaternary text-dark-primary shadow-dark-primary shadow-xl'} p-2 pb-10 rounded-3xl`}>

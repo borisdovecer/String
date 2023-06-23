@@ -1,15 +1,20 @@
 import _ from "lodash";
-import { useEffect, useState } from "react";
-import { useContractFunction, useEthers } from "@usedapp/core";
+import { IEmployee } from "./";
+import { RootState } from "@app/store";
+import { Contract, ContractReceipt } from "ethers";
+import { FC, JSX, useEffect, useState } from "react";
+import { useAppSelector } from "@app/store/hooks.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Falsy, useContractFunction, useEthers } from "@usedapp/core";
 import { faArrowAltCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { ComponentWrapper, TransferTable, EmployeeTable } from "@app/components";
-import { useAppSelector } from "@app/store/hooks.ts";
 
-const Transfer = () => {
-    const contractInstance = useAppSelector((state) => state.contract.instance);
-    const [transactions, setTransactions] = useState<any>(null);
-    const [employees, setEmployees] = useState<any>(null)
+
+
+const Transfer: FC = (): JSX.Element => {
+    const contractInstance: Contract | Falsy = useAppSelector((state: RootState) => state.contract.instance);
+    const [transactions, setTransactions] = useState<number[] | null>(null);
+    const [employees, setEmployees] = useState<IEmployee[] | null>(null)
     const [selected, setSelected] = useState<number[]>([])
     const [addressTo, setAddressTo] = useState<string>('');
     const { account } = useEthers();
@@ -18,13 +23,13 @@ const Transfer = () => {
     useEffect(() => {
         // All NFS on users wallet
         contractInstance?.walletOfOwner(account).then((res:any) => {
-            const tx = _.map(res, (item) => item.toNumber())
+            const tx: number[] = _.map(res, (item) => item.toNumber())
             setTransactions(tx);
         })
 
         // All employees in company
         contractInstance?.getAllEmployeesInCompany(1).then((res:string) => {
-            const mapped = _.map(res, (item:any) => {
+            const mapped: IEmployee[] = _.map(res, (item:any) => {
                 const roles:any = {
                     2: 'Transporter',
                     3: 'Minter'
@@ -41,15 +46,15 @@ const Transfer = () => {
 
     }, [contractInstance]);
 
-    const handleSubmit = () => {
-        send(addressTo, selected).then((res) => console.log(res))
+    const handleSubmit = (): void => {
+        send(addressTo, selected).then((res: ContractReceipt | Falsy) => console.log(res))
     }
 
-    const handleAddressClick = (address:string) => {
+    const handleAddressClick = (address:string): void => {
         setAddressTo(address)
     }
 
-    const handleSelectChange = (e:any) => {
+    const handleSelectChange = (e:any): void => {
         const { id } = e.target
         if (!_.includes(selected, _.toNumber(id))) {
             selected.push(_.toNumber(id));

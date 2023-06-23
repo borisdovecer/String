@@ -16,7 +16,7 @@ export const setProvedAccessBirthday = () => ({
     type: 'PROVE_BIRTHDAY'
 });
 
-const configReducer = (state = initialState, action:any) => {
+const configReducer = (state: IState = initialState, action:any) => {
     switch (action.type) {
         case 'TOGGLE_THEME':
             return {

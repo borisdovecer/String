@@ -1,9 +1,10 @@
-import { useEthers } from "@usedapp/core";
+import { FC, JSX } from "react";
+import { useEthers, Web3Ethers } from "@usedapp/core";
 
-const ConnectWallet = () => {
-    const { activateBrowserWallet } = useEthers();
+const ConnectWallet: FC = (): JSX.Element => {
+    const { activateBrowserWallet }: Web3Ethers = useEthers();
 
-    const connectWallet = () => {
+    const connectWallet = (): void => {
         activateBrowserWallet();
     };
 

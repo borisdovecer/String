@@ -1,9 +1,9 @@
-import {useEthers, Web3Ethers} from "@usedapp/core";
-import {FC, JSX, useEffect, useState} from "react";
-import { Header, Sidebar } from "@app/layout";
-import { useAppSelector } from "@app/store/hooks.ts";
-import AppRoutes from "@app/layout/Routes/AppRoutes.tsx";
 import { RootState } from "@app/store";
+import { Header, Sidebar } from "@app/layout";
+import { FC, JSX, useEffect, useState } from "react";
+import { useAppSelector } from "@app/store/hooks.ts";
+import { useEthers, Web3Ethers } from "@usedapp/core";
+import AppRoutes from "@app/layout/Routes/AppRoutes.tsx";
 
 const Layout: FC = (): JSX.Element => {
     const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
@@ -11,8 +11,8 @@ const Layout: FC = (): JSX.Element => {
     const [openSidebar, setOpenSidebar] = useState<boolean>(false);
     const [delayed, setDelayed] = useState<boolean>(false);
 
-    useEffect(() => {
-        setTimeout(() => {
+    useEffect((): void => {
+        setTimeout((): void => {
             setDelayed(openSidebar)
         }, 420)
     }, [openSidebar])

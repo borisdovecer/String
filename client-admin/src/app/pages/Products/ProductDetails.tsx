@@ -4,15 +4,26 @@ import { ProductCard } from "./";
 import axios from "@app/config/axios.ts";
 import { useEffect, useState } from "react";
 import { ComponentWrapper } from "@app/components";
-import { useContractFunction } from "@usedapp/core";
+import { Falsy, useContractFunction } from "@usedapp/core";
 import { useAppSelector } from "@app/store/hooks.ts";
 import { faBoxOpen} from "@fortawesome/free-solid-svg-icons";
+import { RootState } from "@app/store";
+import { AxiosResponse } from "axios";
+import { Contract } from "ethers";
+
+interface IMedadata {
+    name: string,
+    description: string,
+    image: string,
+    attributes?: {trait_type:string | number, value: string | number}[],
+    properties?: any
+}
 
 const ProductDetails = () => {
-    const theme = useAppSelector((state:any) => state.config.theme);
-    const contractInstance = useAppSelector((state) => state.contract.instance);
+    const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
+    const contractInstance: Contract | Falsy = useAppSelector((state) => state.contract.instance);
     const [data, setData] = useState<any>({});
-    const [metadata, setMetadata] = useState<any>({});
+    const [metadata, setMetadata] = useState<IMedadata | null>(null);
     const { send } = useContractFunction(contractInstance, 'mint', {});
 
     useEffect(() => {
@@ -23,7 +34,8 @@ const ProductDetails = () => {
 
     useEffect(() => {
         if (!_.isEmpty(data)) {
-            axios.get(`https://ipfs.io/ipfs/${data[1]}`).then((res) => {
+            axios.get(`https://ipfs.io/ipfs/${data[1]}`).then((res: AxiosResponse<any>) => {
+                console.log(res.data)
                 setMetadata(res.data)
             })
         }
@@ -56,8 +68,8 @@ const ProductDetails = () => {
                             <ProductCard item={{name: '', metadata:data[1]}} />
                         </div>
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} w-full text-dark-secondary p-4 text-xl rounded-3xl`}>
-                            <p>{metadata.name}</p>
-                            <p>{metadata.description}</p>
+                            <p>{metadata?.name}</p>
+                            <p>{metadata?.description}</p>
                             <div className='flex'>
                                 <button className='w-48 p-4 bg-orange-400 rounded-3xl mt-10' onClick={handleSubmit}>Mint!</button>
                             </div>
@@ -65,7 +77,7 @@ const ProductDetails = () => {
                     </div>
                     <div className='w-full flex flex-row mt-8 space-x-4'>
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} w-1/3 text-dark-secondary p-4 text-xl rounded-3xl`}>
-                            {_.map(metadata.attributes, (item) => (
+                            {_.map(metadata?.attributes, (item) => (
                                 <div className='w-full flex flex-row justify-between'>
                                     <p>{item.trait_type}</p>
                                     <p>{formatValue(item.value)}</p>

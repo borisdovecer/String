@@ -1,20 +1,20 @@
-import { useEthers } from "@usedapp/core";
-import PolygonIDVerifier from "@app/services/PolygonIDVerifier.tsx";
-import { setProvedAccessBirthday } from "@app/config/configReducer.ts";
-import ConnectWallet from "@app/pages/Home/ConnectWallet.tsx";
-import Welcome from "@app/pages/Home/Welcome.tsx";
+import { RootState } from "@app/store";
 import { Link } from "react-router-dom";
+import { FC, JSX, useState } from "react";
+import { Welcome, ConnectWallet } from "./";
+import {useEthers, Web3Ethers} from "@usedapp/core";
+import PolygonIDVerifier from "@app/services/PolygonIDVerifier.tsx";
 import { useAppSelector, useAppDispatch } from "@app/store/hooks.ts";
-import { useState } from "react";
+import { setProvedAccessBirthday } from "@app/config/configReducer.ts";
 
-const Home = () => {
-    const provedAccessBirthday: boolean = useAppSelector((state) => state.config.provedAccessBirthday);
+const Home: FC = (): JSX.Element => {
+    const provedAccessBirthday: boolean = useAppSelector((state: RootState) => state.config.provedAccessBirthday);
     const dispatch = useAppDispatch();
-    const [showQR, setShowQR] = useState(false)
+    const [showQR, setShowQR] = useState<boolean>(false)
 
-    const { account } = useEthers();
+    const { account }: Web3Ethers = useEthers();
 
-    const verify = () => {
+    const verify = (): void => {
         dispatch(setProvedAccessBirthday())
     }
 

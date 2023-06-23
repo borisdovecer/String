@@ -1,12 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Contract } from 'ethers';
-
-// Define a type for the slice state
-interface ContractState {
-    instance: Contract | null;
-    coin: Contract | null;
-    stake: Contract | null;
-}
+import { ContractState } from './';
 
 // Define the initial state
 const initialState: ContractState = {
@@ -15,7 +9,8 @@ const initialState: ContractState = {
     stake: null
 };
 
-export const contractSlice = createSlice({
+
+export const contractSlice= createSlice({
     name: 'contract',
     initialState,
     reducers: {

@@ -1,10 +1,10 @@
 import { RootState } from "@app/store";
 import { Link } from "react-router-dom";
 import { shortenAddress } from "@usedapp/core";
-import { FC, JSX, useEffect, useRef, useState } from "react";
 import { useEthers, Web3Ethers } from "@usedapp/core";
 import { contract } from "@app/config/chainConfig.ts";
 import { toggleTheme } from "@app/config/configReducer.ts";
+import { FC, JSX, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAppSelector, useAppDispatch } from "@app/store/hooks.ts";
 import { faSun, faMoon, faUser, faWallet } from '@fortawesome/free-solid-svg-icons';

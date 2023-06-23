@@ -1,29 +1,26 @@
 import _ from "lodash";
 import { ProductCard } from "./";
-import { fields } from './fields.ts';
+import { Contract } from "ethers";
+import { RootState } from "@app/store";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { FC, JSX, useEffect, useState } from "react";
 import { ComponentWrapper } from "@app/components";
-import { useContractFunction } from "@usedapp/core";
+import { useAppSelector } from "@app/store/hooks.ts";
+import { fields, IFields, IProduct } from './fields.ts';
+import { Falsy, useContractFunction } from "@usedapp/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxOpen, faTag } from "@fortawesome/free-solid-svg-icons";
-import { useAppSelector } from "@app/store/hooks.ts";
 
-interface IProduct {
-    name: string,
-    metadata: string
-}
-
-const ProductList = () => {
-    const theme = useAppSelector((state:any) => state.config.theme);
-    const contractInstance = useAppSelector((state) => state.contract.instance);
+const ProductList: FC = (): JSX.Element => {
+    const theme: boolean = useAppSelector((state:RootState) => state.config.theme);
+    const contractInstance: Contract | Falsy = useAppSelector((state) => state.contract.instance);
     const [formData, setFormData] = useState<any>({});
     const [products, setProducts] = useState<IProduct[] | null>(null);
     const { send } = useContractFunction(contractInstance, 'addProductToCompany', {});
 
     useEffect(() => {
         contractInstance?.getAllProducts(0).then((res:any) => {
-            const mapped = _.map(res, (item): IProduct => {
+            const mapped: IProduct[] = _.map(res, (item): IProduct => {
                 return {
                     name: item[0],
                     metadata: item[1]
@@ -34,12 +31,12 @@ const ProductList = () => {
         })
     }, [contractInstance]);
 
-    const handleChange = (e:any) => {
+    const handleChange = (e:any): void => {
         const { name, value } = e.target;
         setFormData({...formData, [name]: value })
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (): void => {
         const { name, metadata } = formData;
         send(1, name, metadata).then((res) => console.log(res))
     }
@@ -60,7 +57,7 @@ const ProductList = () => {
                     <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} w-full text-black rounded-2xl p-4`}>
                         <span><FontAwesomeIcon icon={faTag} className="mx-2" />new_product_schema_</span>
                         <div className='mt-8'>
-                            {_.map(fields, (item) => (
+                            {_.map(fields, (item: IFields) => (
                                 <div key={item.label} className='flex flex-col'>
                                     <label>{item.label}</label>
                                     <input className={`${theme ? 'bg-light-secondary' : 'bg-light-tertiary'} rounded-xl pl-2`} type={item.type} name={item.name} onChange={handleChange} />

@@ -11,6 +11,7 @@ import {
     Accounts,
     Register,
 } from "@app/pages";
+import { JSX } from "react";
 
 export interface IRoutes {
     id: string,

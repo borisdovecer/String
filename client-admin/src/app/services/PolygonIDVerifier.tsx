@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, FC, JSX} from "react";
 import QRCode from "react-qr-code";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 interface IProps {
     serverURL: string,
@@ -9,13 +9,13 @@ interface IProps {
     issuerLink?: string
 }
 
-const PolygonIDVerifier = ({ serverURL, onVerificationResult }: IProps) => {
+const PolygonIDVerifier: FC<IProps> = ({ serverURL, onVerificationResult }: IProps): JSX.Element => {
     const [sessionId, setSessionId] = useState<string>("");
     const [qrCodeData, setQrCodeData] = useState<any>(null);
     const [verificationMessage, setVerificationMessage] = useState<string>("");
     const [socketEvents, setSocketEvents] = useState<any>([]);
 
-    const socket = io(serverURL);
+    const socket: Socket = io(serverURL);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -40,14 +40,14 @@ const PolygonIDVerifier = ({ serverURL, onVerificationResult }: IProps) => {
     const getQrCodeApi = (sessionId: string): string => serverURL + `/api/get-auth-qr?sessionId=${sessionId}`;
 
     const fetchQrCode = async ():Promise<void> => {
-        const response = await fetch(getQrCodeApi(sessionId));
-        const data = await response.text();
+        const response: Response = await fetch(getQrCodeApi(sessionId));
+        const data: string = await response.text();
         setQrCodeData(JSON.parse(data));
     };
 
     const handleSocketEventSideEffects = (): void => {
         if (socketEvents.length) {
-            const currentSocketEvent:any = socketEvents[socketEvents.length - 1];
+            const currentSocketEvent = socketEvents[socketEvents.length - 1];
 
             if (currentSocketEvent.fn === "handleVerification") {
                 if (currentSocketEvent.status === "IN_PROGRESS") {

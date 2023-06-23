@@ -1,20 +1,17 @@
+import { AxiosResponse } from "axios";
 import axios from "@app/config/axios.ts";
-import { useEffect, useState } from "react";
-
-interface IProduct {
-    name: string,
-    metadata: string
-}
+import { FC, JSX, useEffect, useState } from "react";
+import { IProduct } from "@app/pages/Products/fields.ts";
 
 interface IProps {
     item: IProduct
 }
 
-const ProductCard = ({ item }: IProps) => {
+const ProductCard: FC<IProps> = ({ item }: IProps): JSX.Element => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-    useEffect(() => {
-        axios.get(`https://ipfs.io/ipfs/${item.metadata}`).then((res) => {
+    useEffect((): void => {
+        axios.get(`https://ipfs.io/ipfs/${item.metadata}`).then((res:AxiosResponse<any>): void => {
             if (res.data){
                 setImageUrl(res.data.image);
             }

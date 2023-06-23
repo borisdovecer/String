@@ -1,22 +1,18 @@
 import _ from "lodash";
+import { IProps } from './';
 import { BigNumberish } from "ethers";
 import { items, IItem } from './Items.tsx';
 import { contract } from "@app/config/chainConfig.ts";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation, Location } from "react-router-dom";
+import { FC, Fragment, JSX, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {Dispatch, FC, Fragment, JSX, SetStateAction, useEffect, useState} from "react";
 import { Falsy, useEthers, useTokenBalance, Web3Ethers } from "@usedapp/core";
 
-interface IProps {
-    openSidebar: boolean,
-    setOpenSidebar: Dispatch<SetStateAction<boolean>>
-}
-
 const Sidebar: FC<IProps> = ({openSidebar, setOpenSidebar}:IProps): JSX.Element => {
-    const location: Location = useLocation()
+    const location: Location = useLocation();
     const [activeItem, setActiveItem] = useState<string>(_.split(location.pathname, '/')[1]);
-    const [delayedText, setDelayedText] = useState(false);
+    const [delayedText, setDelayedText] = useState<boolean>(false);
     const { account }: Web3Ethers = useEthers();
 
     const stakedTokens: BigNumberish | Falsy = useTokenBalance(contract.stake, account, {});

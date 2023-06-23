@@ -1,4 +1,3 @@
-import { ComponentWrapper } from "@app/components";
 import {
     faHome,
     faUserCheck,
@@ -9,16 +8,17 @@ import {
     faLockOpen,
     faStar,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-import { useAppSelector } from "@app/store/hooks.ts";
+import { FC, JSX } from "react";
 import { RootState } from "@app/store";
-import { useEthers, useTokenBalance, useToken, Falsy, Web3Ethers } from "@usedapp/core";
+import { Link } from "react-router-dom";
+import { ComponentWrapper } from "@app/components";
+import { useAppSelector } from "@app/store/hooks.ts";
 import { contract } from "@app/config/chainConfig.ts";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TokenInfo } from "@usedapp/core/dist/cjs/src/model/TokenInfo";
+import { useEthers, useTokenBalance, useToken, Falsy, Web3Ethers } from "@usedapp/core";
 
-
-const Welcome = () => {
+const Welcome: FC = (): JSX.Element => {
     const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
     const { account }: Web3Ethers = useEthers();
     const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});

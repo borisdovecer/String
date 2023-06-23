@@ -1,4 +1,15 @@
-export const fields = [
+export interface IFields {
+    label: string;
+    name: string;
+    type: string
+}
+
+export interface IProduct {
+    name: string,
+    metadata: string
+}
+
+export const fields: IFields[] = [
     { label: 'name_', name: 'name', type: 'text' },
     // { label: 'description_', name: 'description', type: 'text' },
     // { label: 'manufacturer_', name: 'manufacturer', type: 'text' },

@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import moment from "moment";
+import { FC, JSX } from "react";
 import { Link } from "react-router-dom";
 
-const Table = ({ data }:any) => {
+const Table: FC = ({ data }:any): JSX.Element => {
     const headers: string[] = Object.keys(data[0]);
 
     const cellFormat = (row:any, header: string) => {

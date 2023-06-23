@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios, {AxiosInstance, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 
-const api = axios.create({});
+const api: AxiosInstance = axios.create({});
 
 // Request interceptor
 api.interceptors.request.use(
-    (res) => {
+    (res: InternalAxiosRequestConfig) => {
         return res;
     },
     (error) => {
@@ -15,7 +15,7 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-    (response) => {
+    (response: AxiosResponse) => {
         return response;
     },
     (error) => {
