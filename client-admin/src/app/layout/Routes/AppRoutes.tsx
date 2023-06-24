@@ -10,7 +10,7 @@ const AppRoutes: FC = (): JSX.Element => {
     const stakedTokens: any = useTokenBalance(contract.stake, account, {});
 
     const routes: IRoutes[] = account ? routeConfig : routeBasic;
-    const filteredRoutes: IRoutes[] = _.filter(routes, (route:IRoutes): boolean => route.requiredBalance <= (stakedTokens / (10**18)));
+    const filteredRoutes: IRoutes[] = _.filter(routes, (route:IRoutes): boolean => route.requiredBalance > 0 ? route.requiredBalance <= (stakedTokens / (10**18)) : true);
 
     const router: JSX.Element[] = filteredRoutes.map((route: IRoutes): JSX.Element =>
         <Route key={route.id} path={route.path} element={route.element} />
