@@ -2,7 +2,6 @@ import {
     Dashboard,
     ErrorPage,
     Home,
-    Swap,
     Support,
     Transfer,
     ProductDetails,
@@ -22,7 +21,6 @@ export interface IRoutes {
 
 export const routeConfig: IRoutes[] = [
     { id: 'home', path:'/', element: <Home />, requiredBalance: 0 },
-    { id: 'token', path:'/token', element: <Swap />, requiredBalance: 0 },
     { id: 'dashboard', path:'/dashboard', element: <Dashboard />, requiredBalance: 100 },
     { id: 'transfer', path:'/transfer', element: <Transfer />, requiredBalance: 1000 },
     { id: 'details', path:'/products/:id', element: <ProductDetails />, requiredBalance: 2000 },
@@ -34,7 +32,6 @@ export const routeConfig: IRoutes[] = [
 
 export const routeBasic: IRoutes[] = [
     { id: 'home', path:'/', element: <Home />, requiredBalance: 0 },
-    { id: 'swap', path:'/Swap', element: <Swap />, requiredBalance: 0 },
     { id: 'register', path:'/register', element: <Register />, requiredBalance: 0 },
     { id: 'support', path:'/support', element: <Support />, requiredBalance: 0 },
     { id: 'error', path:'*', element: <ErrorPage />, requiredBalance: 0 }

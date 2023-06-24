@@ -1,7 +1,6 @@
 import {
     faArrowAltCircleRight,
     faBoxOpen, faCog,
-    faHandHoldingUsd,
     faHome,
     faTachometerAlt,
     faUsers,
@@ -18,7 +17,6 @@ export interface IItem {
 
 export const items: IItem[] = [
     { id: "home", text: "Home", link: "/", icon: faHome, requiredBalance: 0 },
-    { id: "token", text: "Swap & Stake", link: "/token", icon: faHandHoldingUsd, requiredBalance: 0 },
     { id: "accounts", text: "Accounts", link: "/accounts", icon: faUsers, requiredBalance: 1000 },
     { id: "dashboard", text: "Dashboard", link: "/dashboard", icon: faTachometerAlt, requiredBalance: 100 },
     { id: "products", text: "Products", link: "/products", icon: faBoxOpen, requiredBalance: 2000 },

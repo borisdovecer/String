@@ -15,10 +15,9 @@ import { createContract, createCoin, createStake } from "@app/config/ContractSli
 const App: FC = (): JSX.Element => {
     const theme: boolean = useAppSelector((state:RootState) => state.config.theme);
     const { account, library }: Web3Ethers | any = useEthers();
-
     const dispatch:Dispatch<Action> = useAppDispatch();
 
-    useEffect(() => {
+    useEffect((): void => {
         if(account && library){
             const contractInstance: Contract = new Contract(contract.address, StringNFT.abi, library.getSigner());
             const stringInstance: Contract = new Contract(contract.coin, StringCoin.abi, library.getSigner());
