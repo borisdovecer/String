@@ -2,7 +2,7 @@ import _ from "lodash";
 import moment from "moment";
 import { ProductCard } from "./";
 import axios from "@app/config/axios.ts";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState, JSX } from "react";
 import { ComponentWrapper } from "@app/components";
 import { Falsy, useContractFunction } from "@usedapp/core";
 import { useAppSelector } from "@app/store/hooks.ts";
@@ -19,9 +19,9 @@ interface IMedadata {
     properties?: any
 }
 
-const ProductDetails = () => {
+const ProductDetails : FC = () : JSX.Element => {
     const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
-    const contractInstance: Contract | Falsy = useAppSelector((state) => state.contract.instance);
+    const contractInstance: Contract | Falsy = useAppSelector((state: RootState) => state.contract.instance);
     const [data, setData] = useState<any>({});
     const [metadata, setMetadata] = useState<IMedadata | null>(null);
     const { send } = useContractFunction(contractInstance, 'mint', {});
