@@ -10,22 +10,19 @@ contract Registry {
         employeeToCompany[employee] = companyId;
     }
 
-    function getCompanyForEmployee(address employee) public view returns (address) {
+    function getCompanyForEmployee(address employee) external  view returns (address) {
         uint64 companyId = employeeToCompany[employee];
         return companies[companyId];
     }
 
-    function getCompanyIdForEmployee(address employee) public view returns (uint64) {
-        uint64 companyId = employeeToCompany[employee];
-        return companyId;
-    }
-
-    function createCompany(address companyContract) external {
+    function createCompany(address companyContract, address _sender) external {
         companies[numOfCompanies] = companyContract;
+        employeeToCompany[_sender] = numOfCompanies;
         numOfCompanies++;
     }
 
     function upgradeCompanyContract(uint64 companyId, address newCompanyContract) external {
         companies[companyId] = newCompanyContract;
     }
+
 }
