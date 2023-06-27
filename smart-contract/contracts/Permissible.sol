@@ -5,8 +5,6 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./companies/Generic/IRepository.sol";
 
-error NoTokenFound();
-error NotYourToken();
 error CompanyDoesNotExist();
 error NotAuthorized();
 error CallerDoesntHavePermissions();
@@ -27,12 +25,4 @@ abstract contract Permissible {
         }
         _;
     }
-
-    // modifier onlyOwnerOf(uint256 _tokenId) {
-    //     if (ownerOf(_tokenId) != msg.sender)
-    //         revert NotYourToken();
-    //     if (!_exists(_tokenId))
-    //         revert NoTokenFound();
-    //     _;
-    // }
 }

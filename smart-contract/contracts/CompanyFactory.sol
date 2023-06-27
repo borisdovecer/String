@@ -2,32 +2,42 @@
 pragma solidity ^0.8.9;
 import "./companies/Generic/Company.sol";
 import "./companies/Generic/Repository.sol";
-import "./Minter.sol";
+import "./companies/Generic/staking/StakeRepository.sol";
+import "./StringNFT.sol";
+import "./StringCoin.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract CompanyFactory is Ownable {
     address[] private companies;
     uint64 private companyCounter = 0;
     address private registry;
-    Minter private minter;
+    StringCoin private stringCoin;
+    StringNFT private stringNFT;
+    address private rewardContract;
+    bool private isInitialized;
 
-    constructor() {}
-
-    // This is used to initialize the factory when it is first run. This functionality will be moved to the constructor in an real environment.
-    function initialize(address _registry) external onlyOwner {
+    constructor(address _registry, address _coinContractAddress, address _rewardContract) {
+        stringCoin = StringCoin(_coinContractAddress);
         registry = _registry;
-        minter = new Minter();
+        stringNFT = new StringNFT();
+        rewardContract = _rewardContract;
     }
 
     //address _model, address _minter, string memory _name, uint64 _id
-    function createCompany(string memory _companyName) public onlyOwner {
+    function createCompany(string memory _companyName, address _adminAddress) public onlyOwner {
         Repository repository = new Repository();
         Company newCompany = new Company(
             address(repository),
-            address(minter),
+            address(stringNFT),
+            address(stringCoin),
+            rewardContract,
             _companyName,
             companyCounter
         );
+        newCompany.addEmployee(_adminAddress, companyCounter, "", 10);
+        stringCoin.approve(address(newCompany), 1000*10**18);
+        StakeRepository stakeRepo = new StakeRepository(address(newCompany));
+        newCompany.initializeStakeRepository(address(stakeRepo));
         (bool success, ) = registry.call(
             abi.encodeWithSignature(
                 "createCompany(address,address)",
@@ -51,8 +61,10 @@ contract CompanyFactory is Ownable {
     function getCompanies() public view returns (address[] memory) {
         return companies;
     }
+
     // questionable if this will be used at all.
     // function getNumOfCompanies() public view returns (uint64) {
     //     return companyCounter;
     // }
+
 }
