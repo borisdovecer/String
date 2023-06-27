@@ -1,43 +1,26 @@
-// SPDX-License-Identifier: UNLICENSED
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./StringCoin.sol";
-import "./CheckOwnership.sol";
 
-contract Rewards is CheckOwnership {
-    mapping(uint => uint) private tokenIdAmount;
-    StringCoin private stringCoin;
+contract StringCoin is ERC20, Pausable, Ownable {
+    uint256 public constant MAX_SUPPLY = 420000000 * (10 ** 18);
 
-    constructor(address _coinAddress, address _nftAddress) CheckOwnership(_nftAddress){
-        stringCoin = StringCoin(_coinAddress);
-        
+    constructor() ERC20("String Coin", "STRC") Ownable() {
+        _mint(msg.sender, MAX_SUPPLY);
     }
 
-    function add(uint128 _tokenId, uint128 _amount) external {
-        tokenIdAmount[_tokenId] = _amount;
-        stringCoin.approve(msg.sender, _amount*10**18);
-        stringCoin.approve(address(this), _amount*10**18);
-        require(stringCoin.transferFrom(msg.sender, address(this), _amount), "Transfer failed");
+    function pause() public {
+        _pause();
     }
 
-    function claim(uint128 _tokenId, uint128 _amount) external onlyOwnerOf(_tokenId) {
-        require(tokenIdAmount[_tokenId] >= _amount, "Insufficient rewards to claim");
-        tokenIdAmount[_tokenId] -= _amount;
-        require(stringCoin.transfer(msg.sender, _amount), "Transfer failed");
+    function unpause() public {
+        _unpause();
     }
 
-    function transferReward(uint128 _tokenId, uint128 _amount, address _to) external {
-        require(tokenIdAmount[_tokenId] >= _amount, "Insufficient rewards to transfer");
-        tokenIdAmount[_tokenId] -= _amount;
-        require(stringCoin.transfer(_to, _amount), "Transfer failed");
+    function _beforeTokenTransfer(address from, address to, uint256 amount) internal whenNotPaused override {
+        super._beforeTokenTransfer(from, to, amount);
     }
-
-    // function approveAndTransferFrom(address _from, address _to, uint128 _tokenId, uint128 _amount) external {
-    //     require(tokenIdAmount[_tokenId] >= _amount, "Insufficient rewards to transfer");
-    //     tokenIdAmount[_tokenId] -= _amount;
-    //     require(stringCoin.approve(address(this), _amount), "Approval failed");
-    //     require(stringCoin.transferFrom(_from, _to, _amount), "Transfer failed");
-    // }
 }
