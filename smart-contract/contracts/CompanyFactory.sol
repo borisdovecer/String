@@ -12,14 +12,14 @@ contract CompanyFactory is Ownable {
     uint64 private companyCounter = 0;
     address private registry;
     StringCoin private stringCoin;
-    StringNFT private stringNFT;
+    address private stringNFT;
     address private rewardContract;
     bool private isInitialized;
 
-    constructor(address _registry, address _coinContractAddress, address _rewardContract) {
+    constructor(address _registry, address _coinContractAddress, address _rewardContract, address _stringNFT) {
         stringCoin = StringCoin(_coinContractAddress);
         registry = _registry;
-        stringNFT = new StringNFT();
+        stringNFT = _stringNFT;
         rewardContract = _rewardContract;
     }
 
@@ -28,7 +28,7 @@ contract CompanyFactory is Ownable {
         Repository repository = new Repository();
         Company newCompany = new Company(
             address(repository),
-            address(stringNFT),
+            stringNFT,
             address(stringCoin),
             rewardContract,
             _companyName,
@@ -49,22 +49,8 @@ contract CompanyFactory is Ownable {
         companyCounter++;
     }
 
-    function updateCompanyImplementation(
-        address _oldAddress,
-        address _newAddress
-    ) external onlyOwner {
-        // 1. get the company whose contract you are swapping
-        // 2. extract its model address87
-        // 3. The upgraded company contract should already be deployed. Take its address and swap it in place of the old one
-    }
-
     function getCompanies() public view returns (address[] memory) {
         return companies;
     }
-
-    // questionable if this will be used at all.
-    // function getNumOfCompanies() public view returns (uint64) {
-    //     return companyCounter;
-    // }
 
 }
