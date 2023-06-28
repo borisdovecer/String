@@ -7,29 +7,38 @@ import { FC, JSX, useEffect, useState } from "react";
 import { ComponentWrapper } from "@app/components";
 import { useAppSelector } from "@app/store/hooks.ts";
 import { fields, IFields, IProduct } from './fields.ts';
-import { Falsy, useContractFunction } from "@usedapp/core";
+import { useContractFunction, useEthers, Web3Ethers } from "@usedapp/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxOpen, faTag } from "@fortawesome/free-solid-svg-icons";
+import {contract} from "@app/config/chainConfig.ts";
+import Company from "@app/abi/Company.json";
 
 const ProductList: FC = (): JSX.Element => {
     const theme: boolean = useAppSelector((state:RootState) => state.config.theme);
-    const contractInstance: Contract | Falsy = useAppSelector((state) => state.contract.instance);
     const [formData, setFormData] = useState<any>({});
-    const [products, setProducts] = useState<IProduct[] | null>(null);
-    const { send } = useContractFunction(contractInstance, 'addProductToCompany', {});
+    const [products, setProducts] = useState<any>(null);
+    const [companyInstance, setCompanyInstance] = useState<any>()
+    const { library }: Web3Ethers | any = useEthers();
+
+    const { send } = useContractFunction(companyInstance, 'addProduct', {});
 
     useEffect(() => {
-        contractInstance?.getAllProducts(0).then((res:any) => {
-            const mapped: IProduct[] = _.map(res, (item): IProduct => {
+        const companyInstance: Contract = new Contract(contract.company, Company.abi, library.getSigner());
+        setCompanyInstance(companyInstance);
+    }, []);
+
+    useEffect(() => {
+        companyInstance?.getAllProducts().then((res:any) => {
+
+            const realData = _.map(res[1], (item) => {
                 return {
-                    name: item[0],
-                    metadata: item[1]
+                    name: 'Playstation',
+                    metadata: item
                 }
             });
-            const uniqItems: IProduct[] = _.uniqBy(mapped, 'name')
-            setProducts(uniqItems);
+            setProducts(realData)
         })
-    }, [contractInstance]);
+    }, [companyInstance])
 
     const handleChange = (e:any): void => {
         const { name, value } = e.target;
@@ -37,8 +46,8 @@ const ProductList: FC = (): JSX.Element => {
     }
 
     const handleSubmit = (): void => {
-        const { name, metadata } = formData;
-        send(1, name, metadata).then((res) => console.log(res))
+        const { metadata } = formData;
+        send(metadata).then((res) => console.log(res))
     }
 
     return (

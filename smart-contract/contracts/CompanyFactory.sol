@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 import "./companies/Generic/Company.sol";
 import "./companies/Generic/Repository.sol";
-import "./companies/Generic/staking/StakeRepository.sol";
+import "./companies/staking/StakeRepository.sol";
 import "./StringNFT.sol";
 import "./StringCoin.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";

@@ -10,8 +10,9 @@ interface IProps {
 const ProductCard: FC<IProps> = ({ item }: IProps): JSX.Element => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
+
     useEffect((): void => {
-        axios.get(`https://ipfs.io/ipfs/${item.metadata}`).then((res:AxiosResponse<any>): void => {
+        axios.get(`https://ipfs.io/ipfs/QmbjQKkp14PrvDuv5De8y2xz2XhmGZoGbrkUetv2yp91JY`).then((res:AxiosResponse<any>): void => {
             if (res.data){
                 setImageUrl(res.data.image);
             }

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0 <0.9.0;
+pragma solidity ^0.8.9;
 
 import "./StakeModel.sol";
-import "../../../Whitelisted.sol";
+import "../../Whitelisted.sol";
 import "./IStakeRepository.sol";
-import "../Company.sol";
+import "../Generic/Company.sol";
 
 contract StakeRepository is StakeModel, Whitelisted, IStakeRepository {
 

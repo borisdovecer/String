@@ -2,7 +2,7 @@ import _ from "lodash";
 import { topLevelFields } from './';
 import { RootState } from "@app/store";
 import { Link } from "react-router-dom";
-import { FC, Fragment, JSX } from "react";
+import { FC, Fragment, JSX, useEffect, useState } from "react";
 import { formatEther } from "@ethersproject/units";
 import { ComponentWrapper, Swap } from "@app/components";
 import { useAppSelector } from "@app/store/hooks.ts";
@@ -11,17 +11,32 @@ import { contract } from "@app/config/chainConfig.ts";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TokenInfo } from "@usedapp/core/dist/cjs/src/model/TokenInfo";
-import {useEthers, useTokenBalance, useToken, Falsy, Web3Ethers, useEtherBalance} from "@usedapp/core";
-import {BigNumberish} from "ethers";
+import { useEthers, useTokenBalance, useToken, Falsy, Web3Ethers, useEtherBalance } from "@usedapp/core";
+import { BigNumberish, Contract } from "ethers";
+import Company from "@app/abi/Company.json";
 
 const Welcome: FC = (): JSX.Element => {
     const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
-    const { account }: Web3Ethers = useEthers();
+    const { account, library }: Web3Ethers | any = useEthers();
     const ethBalance: BigNumberish | Falsy = useEtherBalance(account)
     const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
-    const nftBalance: string | Falsy = useTokenBalance(contract.address, account, {})?.toString();
+    const nftBalance: string | Falsy = useTokenBalance(contract.nft, account, {})?.toString();
     const strcBalance: any = useTokenBalance(contract.coin, account, {});
-    const stakedTokens: any = useTokenBalance(contract.stake, account, {});
+    const companyBalance: any = useTokenBalance(contract.coin, contract.company, {});
+
+    const [companyInstance, setCompanyInstance] = useState<any>(null);
+    const [stakedBalance, setStakedBalance] = useState<any>();
+
+    useEffect((): void => {
+        const comInstance: Contract = new Contract(contract.company, Company.abi, library.getSigner());
+        setCompanyInstance(comInstance)
+    }, [])
+
+    useEffect(() => {
+        companyInstance?.getStakedBalance().then((res:BigNumberish): void => {
+            setStakedBalance(res);
+        })
+    }, [companyInstance])
 
     return (
         <div className='my-8 w-full'>
@@ -29,8 +44,9 @@ const Welcome: FC = (): JSX.Element => {
                     <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl p-8 text-left text-5xl`}>
                         <h1 className='underline'>One platform</h1>
                         <h1>for managing all <span className='underline'>your products</span>.</h1>
-                        <p className='text-lg pt-16'>ERC721 address: {contract.address}</p>
-                        <p className='text-lg'>ERC20 address: {contract.address}</p>
+                        <p className='text-lg pt-16'>ERC721 address: {contract.nft}</p>
+                        <p className='text-lg'>ERC20 address: {contract.coin}</p>
+                        <p className='text-lg'>Company address: {contract.company}</p>
                     </div>
                     <div className='flex flex-row space-x-4 text-left'>
                         <div className={`${theme ? 'bg-light-primary' : 'bg-light-secondary'} text-dark-primary rounded-3xl mt-8 w-2/3 p-8 text-xl`}>
@@ -38,19 +54,12 @@ const Welcome: FC = (): JSX.Element => {
                             <div className='flex justify-between space-x-4'>
                                 {_.map(topLevelFields, (item: IItem) => (
                                     <Fragment key={item.id}>
-                                        {item.requiredBalance <= (stakedTokens / (10**18)) ?
                                             <Link to={item.link}>
                                                 <div className='text-center'>
                                                     <FontAwesomeIcon icon={item.icon} className="text-5xl p-2 border-2 border-black rounded-xl"/>
                                                     <p className='mt-2'>{item.text}</p>
                                                 </div>
                                             </Link>
-                                            :
-                                            <div className='text-center text-dark-quaternary'>
-                                                <FontAwesomeIcon icon={item.icon} className="text-5xl p-2 border-2 border-dark-quaternary rounded-xl"/>
-                                                <p className='mt-2'>{item.text}</p>
-                                            </div>
-                                        }
                                     </Fragment>
                                 ))}
                             </div>
@@ -70,11 +79,15 @@ const Welcome: FC = (): JSX.Element => {
                             </div>
                             <div className='flex flex-row justify-between'>
                                 <h1 className='text-xl font-bold'>Staked Balance:</h1>
-                                <p className='text-xl font-bold'>{stakedTokens && formatEther(stakedTokens)} {stringToken?.symbol}</p>
+                                <p className='text-xl font-bold'>{stakedBalance && formatEther(stakedBalance)} {stringToken?.symbol}</p>
                             </div>
                             <div className='flex flex-row justify-between'>
-                                <h1 className='text-xl font-bold'>ETH Balance:</h1>
-                                <p className='text-xl font-bold'>{ethBalance && formatEther(ethBalance)} ETH</p>
+                                <h1 className='text-xl font-bold'>Company Balance:</h1>
+                                <p className='text-xl font-bold'>{companyBalance && formatEther(companyBalance)} {stringToken?.symbol}</p>
+                            </div>
+                            <div className='flex flex-row justify-between'>
+                                <h1 className='text-xl font-bold'>MATIC Balance:</h1>
+                                <p className='text-xl font-bold'>{ethBalance && formatEther(ethBalance)} MATIC</p>
                             </div>
                         </div>
                     </div>

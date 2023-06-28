@@ -1,46 +1,39 @@
 const hre = require("hardhat");
 const { ethers } = hre;
 
-async function main() {
-  // Get the Contract Factory
-  // const Proxy = await ethers.getContractFactory('Proxy');
-  // const Registry = await ethers.getContractFactory('Registry');
-  // const CompanyFactory = await ethers.getContractFactory('CompanyFactory');
+async function main(): Promise<void> {
 
-  // Signers represent Ethereum accounts
-  // When running hardhat locally, the accounts will be local and unlocked
-  const accounts = await ethers.getSigners()
-  const deployer = accounts[0]
+    const accounts = await ethers.getSigners()
+    const deployer = accounts[0]
 
-  console.log('Deploying the contract with the account:', deployer.address)
+    console.log('Deploying the contract with the account:', deployer.address)
 
-  // We get the contract to deploy
-  // const proxy = await Proxy.deploy()
-  // await proxy.deployed()
-  //
-  // console.log('Proxy contract deployed to:', proxy.address)
-  //
-  //   const registry = await Registry.deploy()
-  //   await registry.deployed()
-  //
-  //   console.log('Registry contract deployed to:', registry.address)
-  //
-  //   const companyFactory = await CompanyFactory.deploy()
-  //   await companyFactory.deployed()
-  //
-  //   console.log('CompanyFactory contract deployed to:', companyFactory.address)
+    const StringCoin = await ethers.getContractFactory('StringCoin');
+    const StringNFT = await ethers.getContractFactory('StringNFT');
+    const Rewards = await ethers.getContractFactory('Rewards');
+    const Registry = await ethers.getContractFactory('Registry');
+    const CompanyFactory = await ethers.getContractFactory('CompanyFactory');
 
+    const stringCoin = await StringCoin.deploy()
+    await stringCoin.deployed()
+    console.log('StringCoin contract deployed to:', stringCoin.address)
 
-  const StringCoin = await ethers.getContractFactory('StringCoin');
-  const StringStake = await ethers.getContractFactory('StringStake');
+    const stringNft = await StringNFT.deploy()
+    await stringNft.deployed()
+    console.log('StringNFT contract deployed to:', stringNft.address)
 
-  const stringCoin = await StringCoin.deploy()
-  await stringCoin.deployed()
-  console.log('StringCoin contract deployed to:', stringCoin.address)
+    const rewards = await Rewards.deploy(stringCoin.address, stringNft.address)
+    await rewards.deployed()
+    console.log('Rewards contract deployed to:', rewards.address)
 
-  const stringStake = await StringStake.deploy(stringCoin.address)
-  await stringStake.deployed()
-  console.log('StringStake contract deployed to:', stringStake.address)
+    const registry = await Registry.deploy()
+    await registry.deployed()
+    console.log('Registry contract deployed to:', registry.address)
+
+    const companyFactory = await CompanyFactory.deploy(registry.address, stringCoin.address, rewards.address, stringNft.address)
+    await companyFactory.deployed()
+    console.log('CompanyFactory contract deployed to:', companyFactory.address)
+  
 }
 
 main()

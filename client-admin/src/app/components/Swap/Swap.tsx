@@ -4,18 +4,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BigNumber, BigNumberish, Contract, ContractReceipt } from "ethers";
 import { useAppSelector } from "@app/store/hooks.ts";
 import { RootState} from "@app/store";
-import { Falsy, useContractFunction, useEthers, useToken, useTokenBalance, useEtherBalance, Web3Ethers } from "@usedapp/core";
+import { Falsy, useContractFunction, useEthers, useTokenBalance, Web3Ethers } from "@usedapp/core";
 import { useState } from "react";
-import { TokenInfo } from "@usedapp/core/dist/cjs/src/model/TokenInfo";
 import { contract } from "@app/config/chainConfig.ts";
-import { formatEther } from '@ethersproject/units'
 import _ from "lodash";
 
 const Swap = () => {
     const stakeInstance: Contract | null = useAppSelector((state: RootState) => state.contract.stake);
-    const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
+    // const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
     const { account }: Web3Ethers = useEthers();
-    const ethBalance: BigNumberish | Falsy = useEtherBalance(account)
+    // const ethBalance: BigNumberish | Falsy = useEtherBalance(account)
 
     const tokenNumber: BigNumberish | Falsy = useTokenBalance(contract.coin, account, {});
     const stakedTokens: BigNumberish | Falsy = useTokenBalance(contract.stake, account, {});

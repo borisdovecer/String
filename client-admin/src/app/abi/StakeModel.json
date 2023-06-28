@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "StringModel",
-  "sourceName": "contracts/_StringModel.sol",
+  "contractName": "StakeModel",
+  "sourceName": "contracts/companies/staking/StakeModel.sol",
   "abi": [],
   "bytecode": "0x",
   "deployedBytecode": "0x",

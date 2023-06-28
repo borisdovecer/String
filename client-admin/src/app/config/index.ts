@@ -1,10 +1,9 @@
-import { BaseProvider } from "@ethersproject/providers";
 import { Contract } from "ethers";
 
 export interface IConfig {
     readOnlyChainId: number,
     readOnlyChainName: string,
-    readOnlyUrls: { [p: number]: BaseProvider }
+    readOnlyUrls: { [p: number]: string }
 }
 
 export interface IContract {

@@ -1,32 +1,37 @@
 import _ from "lodash";
 import { useEffect, useState} from "react";
 import { useAppSelector } from '@app/store/hooks.ts';
-import { useContractFunction } from "@usedapp/core";
+import {useContractFunction, useEthers, Web3Ethers} from "@usedapp/core";
 import {ComponentWrapper, EmployeeTable} from "@app/components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBuilding, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {Contract} from "ethers";
+import {contract} from "@app/config/chainConfig.ts";
+import Company from "@app/abi/Company.json";
 
 const Accounts = () => {
-    const contractInstance: any = useAppSelector((state) => state.contract.instance);
     const [employees, setEmployees] = useState<any>([])
     const [company, setCompany] = useState<any>([])
     const [address, setAddress] = useState<string>('');
     const [role, setRole] = useState<number>(0);
+    const [companyInstance, setCompanyInstance] = useState<any>()
+    const { library }: Web3Ethers | any = useEthers();
 
-    const addEmployee = useContractFunction(contractInstance, 'addEmployeeToCompany', {});
-    const removeEmployee = useContractFunction(contractInstance, 'removeEmployee', {});
+    const addEmployee = useContractFunction(companyInstance, 'addEmployee', {});
+    // const removeEmployee = useContractFunction(contractInstance, 'removeEmployee', {});
 
     useEffect(() => {
-        contractInstance?.getAllEmployeesInCompany(1).then((res:string) => setEmployees(res));
-        contractInstance?.getCompanyById(1).then((res:string) => setCompany(res));
-    }, [contractInstance]);
+        const companyInstance: Contract = new Contract(contract.company, Company.abi, library.getSigner());
+        setCompanyInstance(companyInstance);
+    }, []);
 
+    console.log(companyInstance)
     const handleAddEmployee = async () => {
-        addEmployee.send(1, address, role).then((res) => console.log(res));
+        addEmployee.send(address,0,'meta', role).then((res) => console.log(res));
     };
     const handleRemoveEmployee = async () => {
-        const { send } = removeEmployee
-        send(address).then((res) => console.log(res));
+        // const { send } = removeEmployee
+        // send(address).then((res) => console.log(res));
     };
 
     const handleChange = (e:any) => {

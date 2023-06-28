@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 import "../../Permissible.sol";
 import "./IRepository.sol";
-import "./staking/IStakeRepository.sol";
+import "../staking/IStakeRepository.sol";
 import "../../StringNFT.sol";
 import "../../StringCoin.sol";
 import "../../Rewards.sol";

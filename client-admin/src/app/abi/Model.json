@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "Permissible",
-  "sourceName": "contracts/Permissible.sol",
+  "contractName": "Model",
+  "sourceName": "contracts/companies/Generic/Model.sol",
   "abi": [],
   "bytecode": "0x",
   "deployedBytecode": "0x",

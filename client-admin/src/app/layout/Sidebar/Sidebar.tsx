@@ -1,20 +1,20 @@
 import _ from "lodash";
 import { IProps } from './';
 import { items, IItem } from './Items.tsx';
-import { contract } from "@app/config/chainConfig.ts";
+// import { contract } from "@app/config/chainConfig.ts";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation, Location } from "react-router-dom";
 import { FC, Fragment, JSX, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEthers, useTokenBalance, Web3Ethers } from "@usedapp/core";
+// import { useEthers, useTokenBalance, Web3Ethers } from "@usedapp/core";
 
 const Sidebar: FC<IProps> = ({openSidebar, setOpenSidebar}: IProps): JSX.Element => {
     const location: Location = useLocation();
     const [activeItem, setActiveItem] = useState<string>(_.split(location.pathname, '/')[1]);
     const [delayedText, setDelayedText] = useState<boolean>(false);
-    const { account }: Web3Ethers = useEthers();
+    // const { account }: Web3Ethers = useEthers();
 
-    const stakedTokens: any = useTokenBalance(contract.stake, account, {});
+    // const stakedTokens: any = useTokenBalance(contract.stake, account, {});
 
     const handleItemClick = (itemId: string): void => {
         setActiveItem(itemId);
@@ -35,19 +35,17 @@ const Sidebar: FC<IProps> = ({openSidebar, setOpenSidebar}: IProps): JSX.Element
             <ul className='space-y-6 pt-6 text-left'>
                 {_.map(items, (item: IItem, index: number) => (
                     <Fragment key={item.id}>
-                        {item.requiredBalance <= (stakedTokens / (10**18)) &&
                             <li key={index} onClick={() => handleItemClick(item.id)}>
                                 <Link to={item.link}
                                       className={`text-xl text-light-primary pl-2 hover:border-l-2 ${activeItem === item.id ? 'border-l-2 font-extrabold' : ''}`}>
                                     <FontAwesomeIcon icon={item.icon} className="mr-4"/>
                                     {delayedText &&
                                         <span className='transition-opacity duration-500 ease-in-out'>
-                                  {openSidebar && item.text}
-                                </span>
+                                            {openSidebar && item.text}
+                                        </span>
                                     }
                                 </Link>
                             </li>
-                        }
                     </Fragment>
                 ))}
             </ul>
