@@ -49,8 +49,22 @@ contract CompanyFactory is Ownable {
         companyCounter++;
     }
 
+    function updateCompanyImplementation(
+        address _oldAddress,
+        address _newAddress
+    ) external onlyOwner {
+        // 1. get the company whose contract you are swapping
+        // 2. extract its model address87
+        // 3. The upgraded company contract should already be deployed. Take its address and swap it in place of the old one
+    }
+
     function getCompanies() public view returns (address[] memory) {
         return companies;
     }
+
+    // questionable if this will be used at all.
+    // function getNumOfCompanies() public view returns (uint64) {
+    //     return companyCounter;
+    // }
 
 }

@@ -62,6 +62,10 @@ contract Company is Permissible {
         return companyId;
     }
 
+    function getAllEmployees() external view returns(address[] memory, string[] memory, uint8[] memory){
+        return repository.getAllEmployees();
+    }
+
     function addProduct(string memory _metadata) external {
         repository.addProduct(_metadata);
     }
@@ -72,6 +76,10 @@ contract Company is Permissible {
         returns (string memory)
     {
         return repository.getProductById(_id);
+    }
+
+    function getAllProducts() external view returns(uint128[] memory, string[] memory) {
+        return repository.getAllProducts();
     }
 
     function mintNewProduct(uint128 _productId, uint128 _amount) external {

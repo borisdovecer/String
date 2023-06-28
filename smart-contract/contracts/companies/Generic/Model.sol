@@ -5,16 +5,19 @@ abstract contract Model {
     // mapping companies by name name
     // mapping employee addresses
     mapping(address => Employee) internal employees;
-    // Relation Employee address to Company name
-    mapping(address => uint64) internal companyOfEmployee;
+    address[] internal employeeKeys;
+
+    // Employee[] internal employees;
     // Relation for Products and Companies
     mapping(uint16 => uint64) internal productOfCompany;
     // map product name and company name
     mapping(uint128 => string) internal products;
+    uint128[] internal productIds;
     // map product id and token id
     mapping(uint128 => uint128) internal productTokenIds;
 
-    mapping(uint64 => address[]) internal employeesInCompany;
+    // mapping(uint64 => address[]) internal employeesInCompany;
+
     mapping(uint128 => uint128[]) internal tokensInProduct;
 
     // productId to tokenId
