@@ -5,31 +5,42 @@ import { BigNumber, BigNumberish, Contract, ContractReceipt } from "ethers";
 import { useAppSelector } from "@app/store/hooks.ts";
 import { RootState} from "@app/store";
 import { Falsy, useContractFunction, useEthers, useTokenBalance, Web3Ethers } from "@usedapp/core";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { contract } from "@app/config/chainConfig.ts";
 import _ from "lodash";
+import Company from "@app/abi/Company.json";
+import StringCoin from "@app/abi/StringCoin.json";
 
 const Swap = () => {
-    const stakeInstance: Contract | null = useAppSelector((state: RootState) => state.contract.stake);
+    // const stakeInstance: Contract | null = useAppSelector((state: RootState) => state.contract.stake);
     // const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
-    const { account }: Web3Ethers = useEthers();
-    // const ethBalance: BigNumberish | Falsy = useEtherBalance(account)
+    const { account, library }: Web3Ethers | any = useEthers();
 
     const tokenNumber: BigNumberish | Falsy = useTokenBalance(contract.coin, account, {});
-    const stakedTokens: BigNumberish | Falsy = useTokenBalance(contract.stake, account, {});
-
     const [unlockAmount, setUnlockAmount] = useState<number>(0);
+    const [transferAmount, setTransferAmount] = useState<number>(0);
 
-    const stake = useContractFunction(stakeInstance, 'stake', {});
-    const withdraw = useContractFunction(stakeInstance, 'withdraw', {});
+
+    const [companyInstance, setCompanyInstance] = useState<any>(null);
+    const [coinInstance, setCoinInstance] = useState<any>(null);
+    const stake = useContractFunction(companyInstance, 'stake', {});
+    const withdraw = useContractFunction(companyInstance, 'withdraw', {});
+    const transfer = useContractFunction(coinInstance, 'transfer', {});
 
     const [stakeAmount, setStakeAmount] = useState<number>(0);
-
     const [errorMessage, setError] = useState<string>('');
+
+    useEffect(() => {
+        const companyInstance: Contract = new Contract(contract.company, Company.abi, library.getSigner());
+        const coinInstance: Contract = new Contract(contract.coin, StringCoin.abi, library.getSigner());
+        setCoinInstance(coinInstance);
+        setCompanyInstance(companyInstance);
+    }, [])
 
     const handleStake = async (): Promise<void> => {
         const { send } = stake;
         const bigNumStakeAmount: BigNumber = BigNumber.from(stakeAmount).mul(BigNumber.from(10).pow(18));
+
 
         if (stakeAmount > 0 && _.toNumber(stakeAmount) <= _.toNumber(tokenNumber) / (10**18)) {
             const res: ContractReceipt | undefined = await send(bigNumStakeAmount);
@@ -42,12 +53,18 @@ const Swap = () => {
             setError('Invalid token amount')
         }
     }
-
+    console.log(coinInstance);
     const handleUnlock = async (): Promise<void> => {
         const { send } = withdraw
-        const bigNumStakeAmount: BigNumber = BigNumber.from(unlockAmount).mul(BigNumber.from(10).pow(18));
+        const bigNumStakeAmount: BigNumber = BigNumber.from("9").mul(BigNumber.from(10).pow(18));
 
-        if (unlockAmount !== 0 && _.toNumber(unlockAmount) <= _.toNumber(stakedTokens) / (10**18)) {
+        const ee =  await companyInstance.getStakedBalance()
+        const xx =  await coinInstance.balanceOf(contract.company)
+
+        console.log(xx);
+
+
+        if (unlockAmount !== 0 || _.toNumber(bigNumStakeAmount) <= _.toNumber(ee)) {
             const res: ContractReceipt | undefined = await send(bigNumStakeAmount);
             if (res) {
                 setError('Ok!')
@@ -57,6 +74,18 @@ const Swap = () => {
         } else {
             setError('Invalid token amount');
         }
+    }
+
+    const handleTransfer = async (): Promise<void> => {
+        const { send } = transfer
+        const bigNumTransferAmount: BigNumber = BigNumber.from(transferAmount).mul(BigNumber.from(10).pow(18));
+        const res: ContractReceipt | undefined = await send(contract.company, bigNumTransferAmount);
+        if (res) {
+            setError('Ok!')
+        } else {
+            setError('Not Ok!')
+        }
+
     }
 
     return (
@@ -70,15 +99,12 @@ const Swap = () => {
                             </div>
                             <div className="mt-4">
                                 <div className="px-4 py-1 font-bold text-lg">
-                                    <p className="">Swap ETH to STRC</p>
+                                    <p className="">Transfer to Company wallet </p>
                                     <div className='mb-4'>
-                                        <input type='number' className='p-2 border border-dark-quaternary rounded-3xl' /> ETH
+                                        <input type='number' className='p-2 border border-dark-quaternary rounded-3xl' onChange={(e:any) => setTransferAmount(e.target.value)} /> STRC
                                     </div>
-                                    <div className='mb-4'>
-                                        <input type='number' className='p-2 border border-dark-quaternary rounded-3xl' /> STRC
-                                    </div>
-                                    <div className='flex'>
-                                        <button className='w-48 p-4 bg-orange-400 rounded-3xl ' onClick={() => console.log('swap')}>Swap!</button>
+                                    <div className='flex flex-row justify-center'>
+                                        <button className='w-48 p-4 bg-orange-400 rounded-3xl ' onClick={handleTransfer}>Send!</button>
                                     </div>
                                 </div>
                             </div>

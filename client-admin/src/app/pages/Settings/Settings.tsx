@@ -4,13 +4,14 @@ import {  useContractFunction, useEthers, Web3Ethers} from "@usedapp/core";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { contract } from "@app/config/chainConfig.ts";
-import { Contract, ContractReceipt } from "ethers";
+import {BigNumber, Contract, ContractReceipt} from "ethers";
 import {useEffect, useState} from "react";
 import CompanyFactory from '@app/abi/CompanyFactory.json'
 import Registry from '@app/abi/Registry.json'
 import Company from '@app/abi/Company.json'
 import StringNFT from '@app/abi/StringNFT.json'
 import StringCoin from '@app/abi/StringCoin.json'
+import _ from "lodash";
 
 const Settings = () => {
     const { account, library }: Web3Ethers | any = useEthers();
@@ -26,7 +27,7 @@ const Settings = () => {
     const mint = useContractFunction(com, 'mintNewProduct', {});
     const stakex = useContractFunction(com, 'stake', {});
     const transferx = useContractFunction(coin, 'transfer', {});
-    const approvex = useContractFunction(coin, 'approve', {});
+    const { state, send } = useContractFunction(coin, 'approve', {});
 
     useEffect(() => {
         const contractInstance: Contract = new Contract(contract.factory, CompanyFactory.abi, library.getSigner());
@@ -45,6 +46,8 @@ const Settings = () => {
         const { send } = factoryContract;
         send('boris', account).then((res: ContractReceipt | undefined) => console.log(res));
     };
+
+    console.log(coin)
 
     const getNftBalance =() => {
         nft.balanceOf(account).then((res:any) => console.log(res.toString()))
@@ -89,11 +92,11 @@ const Settings = () => {
     }
 
     const approve = () => {
-        const { send } = approvex;
-        send(contract.company,10000).then((res: ContractReceipt | undefined) => console.log(res));
+        const bigNumStakeAmount: BigNumber = BigNumber.from("420000").mul(BigNumber.from(10).pow(18));
+        // send('0x7b8dbd971ee6aac5196d8f9713fbeb1f7478185c', contract.company, bigNumStakeAmount);
+
+        send(contract.company,bigNumStakeAmount).then((res: ContractReceipt | undefined) => console.log(res));
     }
-
-
 
     return (
         <div className='my-8 w-full'>

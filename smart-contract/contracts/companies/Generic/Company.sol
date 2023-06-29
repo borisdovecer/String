@@ -7,12 +7,13 @@ import "../../StringNFT.sol";
 import "../../StringCoin.sol";
 import "../../Rewards.sol";
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract Company is Permissible {
+contract Company is Permissible, ReentrancyGuard {
     IRepository private repository;
     IStakeRepository private stakeRepository;
-    StringCoin private stringCoin;
+    IERC20 public stringCoin;
     Rewards private rewardContract;
 
     StringNFT private stringNFT;
@@ -20,10 +21,12 @@ contract Company is Permissible {
     uint64 private companyId;
     bool private isInitialized;
 
+    mapping(address => uint256) private _balances;
+
     constructor(
         address _repository,
         address _stringNFT,
-        address _coinContractAddress,
+        IERC20 _coinContractAddress,
         address _rewardContract,
         string memory _name,
         uint64 _companyId
@@ -32,18 +35,24 @@ contract Company is Permissible {
         companyName = _name;
         companyId = _companyId;
         stringNFT = StringNFT(_stringNFT);
-        stringCoin = StringCoin(_coinContractAddress);
+        stringCoin = _coinContractAddress;
         rewardContract = Rewards(_rewardContract);
     }
 
-    function withdraw(uint128 _amount) external {
-        stakeRepository.withdrawStakedAmount(_amount);
-        stringCoin.transferFrom(address(stakeRepository), msg.sender, _amount);
+    function stake(uint256 amount) public nonReentrant {
+        stringCoin.transferFrom(msg.sender, address(this), amount);
+        _balances[msg.sender] += amount;
     }
 
-    function stake(uint128 _amount) external {
-        stakeRepository.addStakedBalance(_amount);
-        stringCoin.transferFrom(msg.sender, address(stakeRepository), _amount);
+    function withdraw(uint256 amount) public nonReentrant {
+        require(_balances[msg.sender] >= amount, "Withdrawal amount exceeds staked balance");
+
+        _balances[msg.sender] -= amount;
+        stringCoin.transfer(msg.sender, amount);
+    }
+
+    function balanceOf(address account) public view returns (uint256) {
+        return _balances[account];
     }
 
     function getStakedBalance() external view returns (uint256) {

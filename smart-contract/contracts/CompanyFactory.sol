@@ -29,7 +29,7 @@ contract CompanyFactory is Ownable {
         Company newCompany = new Company(
             address(repository),
             stringNFT,
-            address(stringCoin),
+            stringCoin,
             rewardContract,
             _companyName,
             companyCounter
