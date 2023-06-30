@@ -1,53 +1,46 @@
 import _ from "lodash";
 import { IEmployee } from "./";
-import { RootState } from "@app/store";
 import { Contract, ContractReceipt } from "ethers";
 import { FC, JSX, useEffect, useState } from "react";
-import { useAppSelector } from "@app/store/hooks.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Falsy, useContractFunction, useEthers } from "@usedapp/core";
 import { faArrowAltCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { ComponentWrapper, TransferTable, EmployeeTable } from "@app/components";
-
-
+import {contract} from "@app/config/chainConfig.ts";
+import StringNFT from "@app/abi/StringNFT.json";
+import Company from "@app/abi/Company.json";
 
 const Transfer: FC = (): JSX.Element => {
-    const contractInstance: Contract | Falsy = useAppSelector((state: RootState) => state.contract.instance);
-    const [transactions, setTransactions] = useState<number[] | null>(null);
-    const [employees, setEmployees] = useState<IEmployee[] | null>(null)
+    const [nftInstance, setNftInstance] = useState<any>(null);
+    const ids= [1,2,3,4,5,6,7,8,9,10,11,12,13]
+
+    const [transactions, setTransactions] = useState<number[] | null>(ids);
+    const [employees, setEmployees] = useState<IEmployee[] | any>(null)
     const [selected, setSelected] = useState<number[]>([])
     const [addressTo, setAddressTo] = useState<string>('');
-    const { account } = useEthers();
-    const { send } = useContractFunction(contractInstance, 'bulkTransfer', {});
+    const { account, library }: any = useEthers();
+    const transferFrom = useContractFunction(nftInstance, 'transferFrom', {});
+    const [companyInstance, setCompanyInstance] = useState<any>(null);
 
     useEffect(() => {
-        // All NFS on users wallet
-        contractInstance?.walletOfOwner(account).then((res:any) => {
-            const tx: number[] = _.map(res, (item) => item.toNumber())
-            setTransactions(tx);
+        const nftInstance: Contract = new Contract(contract.nft, StringNFT.abi, library.getSigner());
+        const companyInstance: Contract = new Contract(contract.company, Company.abi, library.getSigner());
+        setCompanyInstance(companyInstance);
+        setNftInstance(nftInstance);
+    }, []);
+
+    console.log(nftInstance)
+
+    useEffect(() => {
+        companyInstance?.getAllEmployees().then((res:any) => {
+            const formated = _.map(_.zip(...res), ([wallet, metadata, level]) => ({ wallet, metadata, level }));
+            setEmployees(formated);
         })
-
-        // All employees in company
-        contractInstance?.getAllEmployeesInCompany(1).then((res:string) => {
-            const mapped: IEmployee[] = _.map(res, (item:any) => {
-                const roles:any = {
-                    2: 'Transporter',
-                    3: 'Minter'
-                };
-
-                const role: string = item[2] > 3 ? 'admin' : (roles[item[2]] || 'Viewer');
-                return {
-                    wallet: item[0],
-                    role
-                }
-            })
-            setEmployees(mapped)
-        });
-
-    }, [contractInstance]);
+    }, [companyInstance])
 
     const handleSubmit = (): void => {
-        send(addressTo, selected).then((res: ContractReceipt | Falsy) => console.log(res))
+        const { send } = transferFrom;
+        send(account, addressTo, 1).then((res: ContractReceipt | Falsy) => console.log(res))
     }
 
     const handleAddressClick = (address:string): void => {

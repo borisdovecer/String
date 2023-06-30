@@ -38,7 +38,7 @@ const ProductDetails : FC = () : JSX.Element => {
     }, []);
 
     useEffect(() => {
-        companyInstance?.getProductById(2).then((res:any) => {
+        companyInstance?.getProductById(0).then((res:any) => {
             setData({name: 'Playstation z', metadata: res})
         })
     }, [companyInstance])

@@ -10,6 +10,7 @@ export const config: IConfig = {
     },
 };
 
+console.log()
 export const contract: any = {
     nft: '0xF692D943e7D18b290CC38f51583b4c80D9917b5C',
     coin: '0xFFa7CF04864Cc07Ed4ACBc9A4e01B5066452Cec6',
@@ -17,6 +18,5 @@ export const contract: any = {
     factory: '0x7aEBf14876Db217962b45675F5C1e18D2e0b74Eb',
     reward: '0xc135FD457F1F8602b55EceaCc6EcB3faf71F19c8',
     registry: '0xa7C289C9afd37FbC41b2A32e33df32347D04D3a3',
-    company: '0xD77fb352715F1F93C0EeD94BD8314b4B11c24bfB'
-
+    company: localStorage.companyWallet
 }

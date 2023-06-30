@@ -18,7 +18,7 @@ abstract contract Model {
 
     // mapping(uint64 => address[]) internal employeesInCompany;
 
-    mapping(uint128 => uint128[]) internal tokensInProduct;
+    mapping(uint128 => uint128[]) internal 3;
 
     // productId to tokenId
 

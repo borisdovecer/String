@@ -19,7 +19,7 @@ const Welcome: FC = (): JSX.Element => {
     const theme: boolean = useAppSelector((state: RootState) => state.config.theme);
     const { account, library }: Web3Ethers | any = useEthers();
     const ethBalance: BigNumberish | Falsy = useEtherBalance(account)
-    const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
+    // const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
     const nftBalance: string | Falsy = useTokenBalance(contract.nft, account, {})?.toString();
     const strcBalance: any = useTokenBalance(contract.coin, account, {});
     const companyBalance: any = useTokenBalance(contract.coin, contract.company, {});
@@ -75,15 +75,15 @@ const Welcome: FC = (): JSX.Element => {
                             </div>
                             <div className='flex flex-row justify-between'>
                                 <h1 className='text-xl font-bold'>STRC Balance:</h1>
-                                <p className='text-xl font-bold'>{strcBalance && formatEther(strcBalance)} {stringToken?.symbol}</p>
+                                <p className='text-xl font-bold'>{strcBalance && formatEther(strcBalance)} STRC</p>
                             </div>
                             <div className='flex flex-row justify-between'>
                                 <h1 className='text-xl font-bold'>Staked Balance:</h1>
-                                <p className='text-xl font-bold'>{stakedBalance && formatEther(stakedBalance)} {stringToken?.symbol}</p>
+                                <p className='text-xl font-bold'>{stakedBalance && formatEther(stakedBalance)} STRC</p>
                             </div>
                             <div className='flex flex-row justify-between'>
                                 <h1 className='text-xl font-bold'>Company Balance:</h1>
-                                <p className='text-xl font-bold'>{companyBalance && formatEther(companyBalance)} {stringToken?.symbol}</p>
+                                <p className='text-xl font-bold'>{companyBalance && formatEther(companyBalance)} STRC</p>
                             </div>
                             <div className='flex flex-row justify-between'>
                                 <h1 className='text-xl font-bold'>MATIC Balance:</h1>

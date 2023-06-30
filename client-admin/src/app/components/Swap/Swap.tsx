@@ -1,38 +1,47 @@
 import { ComponentWrapper } from "@app/components";
 import { faExchangeAlt, faHandHoldingUsd} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BigNumber, BigNumberish, Contract, ContractReceipt } from "ethers";
-import { useAppSelector } from "@app/store/hooks.ts";
-import { RootState} from "@app/store";
-import { Falsy, useContractFunction, useEthers, useTokenBalance, Web3Ethers } from "@usedapp/core";
-import {useEffect, useState} from "react";
-import { contract } from "@app/config/chainConfig.ts";
+import {BigNumber, BigNumberish, constants, Contract, ContractReceipt} from "ethers";
+import { Falsy, useContractFunction, useEthers, useTokenBalance, Web3Ethers, Mumbai } from "@usedapp/core";
+import { useEffect, useState } from "react";
+import {config, contract} from "@app/config/chainConfig.ts";
 import _ from "lodash";
 import Company from "@app/abi/Company.json";
 import StringCoin from "@app/abi/StringCoin.json";
+import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import { SwapWidget  } from '@uniswap/widgets'
+import {Link} from "react-router-dom";
+const UNISWAP_ROUTER_ADDRESS = "your Uniswap Router address"
+const TOKEN_ADDRESS = contract.coin
+const WETH_ADDRESS = constants.AddressZero
+// const UNISWAP_ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
 
 const Swap = () => {
-    // const stakeInstance: Contract | null = useAppSelector((state: RootState) => state.contract.stake);
-    // const stringToken: TokenInfo | Falsy = useToken(contract.coin, {});
     const { account, library }: Web3Ethers | any = useEthers();
-
-    const tokenNumber: BigNumberish | Falsy = useTokenBalance(contract.coin, account, {});
-    const [unlockAmount, setUnlockAmount] = useState<number>(0);
-    const [transferAmount, setTransferAmount] = useState<number>(0);
-
-
     const [companyInstance, setCompanyInstance] = useState<any>(null);
     const [coinInstance, setCoinInstance] = useState<any>(null);
+
+    const tokenNumber: BigNumberish | Falsy = useTokenBalance(contract.coin, account, {});
+    const [stakeAmount, setStakeAmount] = useState<number>(0);
+    const [unlockAmount, setUnlockAmount] = useState<number>(0);
+
     const stake = useContractFunction(companyInstance, 'stake', {});
     const withdraw = useContractFunction(companyInstance, 'withdraw', {});
-    const transfer = useContractFunction(coinInstance, 'transfer', {});
 
-    const [stakeAmount, setStakeAmount] = useState<number>(0);
+    const [uniswapInstance, setUniswapInstance] = useState<any>(null);
+    const swwar = useContractFunction(uniswapInstance, 'swapExactTokensForETHSupportingFeeOnTransferTokens', { transactionName: 'Swap' })
+
     const [errorMessage, setError] = useState<string>('');
 
     useEffect(() => {
         const companyInstance: Contract = new Contract(contract.company, Company.abi, library.getSigner());
         const coinInstance: Contract = new Contract(contract.coin, StringCoin.abi, library.getSigner());
+        const uniswapRouter = new Contract(
+            UNISWAP_ROUTER_ADDRESS,
+            IUniswapV2Router02ABI,
+            library.getSigner()
+        )
+        setUniswapInstance(uniswapRouter);
         setCoinInstance(coinInstance);
         setCompanyInstance(companyInstance);
     }, [])
@@ -40,7 +49,6 @@ const Swap = () => {
     const handleStake = async (): Promise<void> => {
         const { send } = stake;
         const bigNumStakeAmount: BigNumber = BigNumber.from(stakeAmount).mul(BigNumber.from(10).pow(18));
-
 
         if (stakeAmount > 0 && _.toNumber(stakeAmount) <= _.toNumber(tokenNumber) / (10**18)) {
             const res: ContractReceipt | undefined = await send(bigNumStakeAmount);
@@ -53,18 +61,12 @@ const Swap = () => {
             setError('Invalid token amount')
         }
     }
-    console.log(coinInstance);
     const handleUnlock = async (): Promise<void> => {
         const { send } = withdraw
-        const bigNumStakeAmount: BigNumber = BigNumber.from("9").mul(BigNumber.from(10).pow(18));
+        const bigNumStakeAmount: BigNumber = BigNumber.from(unlockAmount).mul(BigNumber.from(10).pow(18));
+        const stakedBalance =  await companyInstance.getStakedBalance()
 
-        const ee =  await companyInstance.getStakedBalance()
-        const xx =  await coinInstance.balanceOf(contract.company)
-
-        console.log(xx);
-
-
-        if (unlockAmount !== 0 || _.toNumber(bigNumStakeAmount) <= _.toNumber(ee)) {
+        if (unlockAmount !== 0 || _.toNumber(bigNumStakeAmount) <= _.toNumber(stakedBalance)) {
             const res: ContractReceipt | undefined = await send(bigNumStakeAmount);
             if (res) {
                 setError('Ok!')
@@ -76,16 +78,16 @@ const Swap = () => {
         }
     }
 
-    const handleTransfer = async (): Promise<void> => {
-        const { send } = transfer
-        const bigNumTransferAmount: BigNumber = BigNumber.from(transferAmount).mul(BigNumber.from(10).pow(18));
-        const res: ContractReceipt | undefined = await send(contract.company, bigNumTransferAmount);
-        if (res) {
-            setError('Ok!')
-        } else {
-            setError('Not Ok!')
-        }
+    const handleSwap = async (): Promise<void> => {
+        // ... define amountOutMin, path, and to based on your requirements
 
+        // Send the transaction
+        const { send } = swap;
+        // const res = await send(amountOutMin, path, to, Math.floor(Date.now() / 1000) + 60 * 20);
+    }
+
+    const jsonRpcUrlMap = {
+        80001: ['https://rpc-mumbai.maticvigil.com/'],
     }
 
     return (
@@ -98,14 +100,12 @@ const Swap = () => {
                                 <h2 className="text-xl font-semibold"><FontAwesomeIcon icon={faExchangeAlt} className="mx-2" />Swap</h2>
                             </div>
                             <div className="mt-4">
-                                <div className="px-4 py-1 font-bold text-lg">
-                                    <p className="">Transfer to Company wallet </p>
-                                    <div className='mb-4'>
-                                        <input type='number' className='p-2 border border-dark-quaternary rounded-3xl' onChange={(e:any) => setTransferAmount(e.target.value)} /> STRC
-                                    </div>
-                                    <div className='flex flex-row justify-center'>
-                                        <button className='w-48 p-4 bg-orange-400 rounded-3xl ' onClick={handleTransfer}>Send!</button>
-                                    </div>
+                                <div className="Uniswap">
+                                    {/*<SwapWidget jsonRpcUrlMap={jsonRpcUrlMap} />*/}
+                                    well... until i finish this swap MATIC for STRC here:
+                                    <Link to='https://app.uniswap.org/#/swap' target="_blank">
+                                        <p className='text-xl mt-4 font-bold'>uniswap</p>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

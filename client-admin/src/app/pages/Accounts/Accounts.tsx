@@ -1,6 +1,5 @@
 import _ from "lodash";
 import { useEffect, useState} from "react";
-import { useAppSelector } from '@app/store/hooks.ts';
 import {useContractFunction, useEthers, Web3Ethers} from "@usedapp/core";
 import {ComponentWrapper, EmployeeTable} from "@app/components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,10 +10,11 @@ import Company from "@app/abi/Company.json";
 
 const Accounts = () => {
     const [employees, setEmployees] = useState<any>([])
-    const [company, setCompany] = useState<any>([])
+    // const [company, setCompany] = useState<any>([])
     const [address, setAddress] = useState<string>('');
     const [role, setRole] = useState<number>(0);
-    const [companyInstance, setCompanyInstance] = useState<any>()
+    const [companyInstance, setCompanyInstance] = useState<any>(null);
+
     const { library }: Web3Ethers | any = useEthers();
 
     const addEmployee = useContractFunction(companyInstance, 'addEmployee', {});
@@ -25,7 +25,14 @@ const Accounts = () => {
         setCompanyInstance(companyInstance);
     }, []);
 
-    console.log(companyInstance)
+    useEffect(() => {
+        companyInstance?.getAllEmployees().then((res:any) => {
+            const formated = _.map(_.zip(...res), ([wallet, metadata, level]) => ({ wallet, metadata, level }));
+            setEmployees(formated);
+
+        })
+    }, [companyInstance])
+
     const handleAddEmployee = async () => {
         addEmployee.send(address,0,'meta', role).then((res) => console.log(res));
     };
@@ -46,36 +53,19 @@ const Accounts = () => {
         setAddress(address)
     }
 
-    const accounts = _.map(employees, (item) => {
-        const roles:any = {
-            2: 'Transporter',
-            3: 'Minter'
-        };
-
-        const role: string = item[2] > 3 ? 'admin' : (roles[item[2]] || 'Viewer');
-
-        return {
-            wallet: item[0],
-            company: company[0],
-            role
-        }
-    })
-    const filterZeroCompany = _.filter(accounts, (item: never) => item[1] !== 0)
-    const uniqueAddresses = _.uniqBy(filterZeroCompany, 'wallet')
-
     return (
         <div className='my-8 w-full'>
             <ComponentWrapper title='Acount Management' icon={faUsers}>
                 <div className='flex flex-row space-x-4 text-black'>
                     <div className='w-3/4'>
                         <div className={`bg-light-secondary text-dark-primary rounded-3xl h-min-full`}>
-                            {!_.isEmpty(uniqueAddresses) && <EmployeeTable employees={uniqueAddresses} handleAddressClick={handleAddressClick}/>}
+                            {!_.isEmpty(employees) && <EmployeeTable employees={employees} handleAddressClick={handleAddressClick}/>}
                         </div>
                     </div>
                     <div className={`bg-light-primary text-dark-primary w-1/4  mt-6 rounded-3xl `}>
                         <div className="rounded-3xl">
                             <div className={`bg-light-secondary text-dark-primary rounded-3xl px-2 py-2`}>
-                                <h2 className="text-xl font-semibold"><FontAwesomeIcon icon={faBuilding} className="mx-2" />{company[0]}</h2>
+                                <h2 className="text-xl font-semibold"><FontAwesomeIcon icon={faBuilding} className="mx-2" />{}</h2>
                             </div>
                             <div className="mt-4">
                                     <div className="justify-between px-4 py-1 font-bold text-lg">

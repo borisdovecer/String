@@ -4,13 +4,18 @@ import { IEmployee } from "@app/pages/Transfer";
 import { IProps } from './';
 
 const EmployeeTable: FC<IProps> = ({employees, handleAddressClick}: IProps): JSX.Element => {
-    console.log(employees)
+        const roles:any = {
+            2: 'Transporter',
+            3: 'Minter'
+        };
+
     return (
         <div className="overflow-x-auto custom-scrollbar mt-6 rounded-3xl text-left">
             <table className="w-full">
                 <thead>
                 <tr className={`bg-light-secondary text-dark-primary rounded-2xl px-2 md:px-4 py-2 font-bold cursor-pointer`}>
                     <th className='px-12'>Wallet</th>
+                    <th>Metadata</th>
                     <th>Role</th>
                 </tr>
                 </thead>
@@ -18,7 +23,8 @@ const EmployeeTable: FC<IProps> = ({employees, handleAddressClick}: IProps): JSX
                 {_.map(employees, (employee:IEmployee) => (
                     <tr key={employee.wallet} className={`bg-light-primary text-dark-secondary py-2`}>
                         <td onClick={() => handleAddressClick(employee.wallet)} className='cursor-pointer px-8 py-2'>{employee.wallet}</td>
-                        <td>{employee.role}</td>
+                        <td>{employee.metadata}</td>
+                        <td>{employee.level > 3 ? 'Admin' : (roles[employee.level] || 'Viewer')}</td>
                     </tr>
                 ))}
                 </tbody>
